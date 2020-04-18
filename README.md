@@ -5,6 +5,5 @@ I am using a newer version and am using VS Code.
 
 ## These are my lectures:
 
-* Battle Tank Overview
-* Game Design Document (GDD)
 * Testing Git Hub
+* Setting Up Github Repo
