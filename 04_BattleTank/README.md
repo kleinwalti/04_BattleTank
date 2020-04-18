@@ -7,3 +7,4 @@ I am using a newer version and am using VS Code.
 
 * Testing Git Hub
 * Setting Up Github Repo
+* Creating the Project
