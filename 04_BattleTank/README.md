@@ -11,3 +11,4 @@ I am using a newer version and am using VS Code.
 * Creating and Deleting a Landscape
 * 112. A Landscaping Process
 * 114. Using Landscape Layers
+* 115. Flat Shading
