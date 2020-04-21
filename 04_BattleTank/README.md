@@ -16,3 +16,4 @@ I am using a newer version and am using VS Code.
 * 118. Actors from multiple Meshes
 * 120. Configuring A Tank
 * 121. Third Person Camera Control
+* 122. Fixing Camera Rotation
