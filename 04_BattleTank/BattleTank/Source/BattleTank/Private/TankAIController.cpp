@@ -3,14 +3,15 @@
 #include "Engine/World.h"
 #include "GameFramework/Controller.h"
 #include "TankAIController.h"
+#include "Tank.h"
 
 void ATankAIController::BeginPlay()
 {
 
     Super::BeginPlay();
 
-    ATank* PosessedTank = Cast<ATank>(GetPawn());
-    ATank* PlayerTank = GetPlayerTank();
+    PosessedTank = Cast<ATank>(GetPawn());
+    PlayerTank = GetPlayerTank();
 
     if (PosessedTank && PlayerTank)
     {
@@ -19,6 +20,26 @@ void ATankAIController::BeginPlay()
     else
     {
         UE_LOG(LogTemp, Error, TEXT("TankAIContoller-hc hasn't found a tank to posess or hasn't found the PlyerTank. Protection from null ptr."));
+    }
+}
+
+void ATankAIController::Tick( float DeltaSeconds )
+{
+    Super::Tick ( DeltaSeconds );
+    AimAtPlayer();
+}
+
+bool ATankAIController::AimAtPlayer() const
+{
+    if (PosessedTank && PlayerTank)
+    {
+        FVector PlayerTankLocation = PlayerTank->GetActorLocation();
+        PosessedTank->AimAt(PlayerTankLocation);
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
 
