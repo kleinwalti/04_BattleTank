@@ -44,10 +44,9 @@ void ATank::Fire()
 	FVector SocketLocation = Barrel->GetSocketLocation( FName(TEXT("BarrelEnd")) );
 	FRotator SocketRotation = Barrel->GetSocketRotation( FName(TEXT("BarrelEnd")) );
 
-	UE_LOG(LogTemp, Warning, TEXT("SpawnLocation will be: %s"), *SocketLocation.ToString() );	// can be deleted
-
 	// Spawn Projectile_BP (set in Tank_BP) at Socket Location
-	GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, SocketLocation, SocketRotation);
+	auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, SocketLocation, SocketRotation);
+	Projectile->LaunchProjectile(LaunchSpeed);
 }
 
 // This function is called by the Tank_BP
