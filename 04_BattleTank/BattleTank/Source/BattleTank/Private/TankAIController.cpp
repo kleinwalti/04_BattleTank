@@ -7,56 +7,57 @@
 
 void ATankAIController::BeginPlay()
 {
-
     Super::BeginPlay();
-
-    PosessedTank = Cast<ATank>(GetPawn());
-    PlayerTank = GetPlayerTank();
-
-    if (PosessedTank && PlayerTank)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("TankAIContoller-hc is possessing: %s and has found %s to be the PlayerTank"), *PosessedTank->GetName(), *PlayerTank->GetName());
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("TankAIContoller-hc hasn't found a tank to posess or hasn't found the PlyerTank. Protection from null ptr."));
-    }
+    CheckForPosessedTankAndPlayerTank();
 }
 
 void ATankAIController::Tick( float DeltaSeconds )
 {
     Super::Tick ( DeltaSeconds );
-    AimAtPlayer();
-}
 
-bool ATankAIController::AimAtPlayer() const
-{
+    // Get the Tank the AI is posessing and Get the Tank the Player is posessing
+    PosessedTank = Cast<ATank>(GetPawn());
+    PlayerTank = GetPlayerTank();    
+
+    // only if Posessed- and Player-Tank are found:
     if (PosessedTank && PlayerTank)
     {
-        FVector PlayerTankLocation = PlayerTank->GetActorLocation();
-        PosessedTank->AimAt(PlayerTankLocation);
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+        // Aim at the Player Tank location
+        PosessedTank->AimAt(PlayerTank->GetActorLocation());
+
+        // Fire
+        PosessedTank->Fire();
+    } 
 }
 
 ATank* ATankAIController::GetPlayerTank() const
 {
+    // Get the Pawn of the First Player
     APawn* FirstPlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
+
+    // Check if Pawn was found before Casting (If no pawn found, give Error message and return nullptr)
     if (!FirstPlayerPawn)
     {
         UE_LOG(LogTemp, Error, TEXT("TankAIController, GetPlayerTank(), FirstPlayerPawn could not be found!"));
         return nullptr;
     }
 
+    // Check if PlayerPawn is a Tank (If not, give Error message and return nullptr)
     ATank* FirstPlayerTank = Cast<ATank>(FirstPlayerPawn);
     if (!FirstPlayerTank)
     {
         UE_LOG(LogTemp, Error, TEXT("TankAIController, GetPlayerTank(), FirstPlayerController and Pawn found, but it is not controlling a Tank!"));
+        return nullptr;
     }
 
     return FirstPlayerTank;
+}
+
+void ATankAIController::CheckForPosessedTankAndPlayerTank()
+{
+    // Check if both AI Tank and PlayerTank are there and found
+    if (! (Cast<ATank>(GetPawn()) && Cast<ATank>(GetPawn())) )
+    {
+        UE_LOG(LogTemp, Error, TEXT("TankAIContoller-hc hasn't found a tank to posess or hasn't found the PlayerTank. Protection from null ptr."));
+    }
 }

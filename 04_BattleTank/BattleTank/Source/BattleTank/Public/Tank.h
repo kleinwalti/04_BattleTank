@@ -33,7 +33,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void SetTurretReference(UTankTurret* TurretToSet);
 
-	UPROPERTY(EditAnywhere, Category = Setup)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	TSubclassOf<AProjectile> ProjectileBlueprint = nullptr;
 
 protected:
@@ -46,10 +46,16 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
-	UPROPERTY(EditAnywhere, Category = Firing)
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float LaunchSpeed = 4000.f; // TODO: Change this to a sensible starting value
+
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float ReloadTimeInSeconds = 3.f;
 
 	// creating local reference to Barrel in ATank class.
 	UTankBarrel* Barrel = nullptr;
+
+
+	double LastFireTime = 0;
 
 };

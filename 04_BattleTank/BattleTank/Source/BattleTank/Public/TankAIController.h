@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-// #include "Tank.h"
 #include "TankAIController.generated.h"
 
 class ATank;	// forward declaration instead of #include "Tank.h"
@@ -21,9 +20,9 @@ public:
 
 private:
 
+	void CheckForPosessedTankAndPlayerTank();
 	ATank* PosessedTank = nullptr;
 	ATank* PlayerTank = nullptr;
 	ATank* GetPlayerTank() const;
-	bool AimAtPlayer() const;
 	
 };

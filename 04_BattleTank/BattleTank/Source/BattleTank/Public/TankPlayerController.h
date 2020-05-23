@@ -25,9 +25,9 @@ private:
 	bool GetSightRayHitLocation(FVector &HitLocation) const;
 	bool GetLookVectorHitLocation(FVector &HitLocation, FVector CameraWorldLocation, FVector LookVector) const;
 
-	UPROPERTY (EDITANYWHERE)
+	UPROPERTY (EditDefaultsOnly)
 	float CrosshairXLocation = 0.5f;
 
-	UPROPERTY (EDITANYWHERE)
+	UPROPERTY (EditDefaultsOnly)
 	float CrosshairYLocation = 0.3333f;
 };

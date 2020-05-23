@@ -20,15 +20,15 @@ public:
 
 private:
 	// How fast the barrel can move as a maximum, in degrees per second
-	UPROPERTY(EditAnywhere, Category = Setup)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	float MaxDegreesPerSecond = 5.f;	
 
 	// How high the Barrel is able to aim, in degrees
-	UPROPERTY(EditAnywhere, Category = Setup)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	float MaxElevationDegrees = 40.f;
 
 	// How low the Barrel is able to aim, in degrees
-	UPROPERTY(EditAnywhere, Category = Setup)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	float MinElevationDegrees = 0.f;
 
 	

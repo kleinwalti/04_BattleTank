@@ -37,16 +37,24 @@ void ATank::AimAt(FVector HitLocation)
 void ATank::Fire()
 {
 	// Protection from nullptr (maybe not needed for ProjectileBlueprint Variable)
-	if(!Barrel) {return;}
+	if(!Barrel) {UE_LOG(LogTemp, Error, TEXT("ATank::Fire() - No Barrel found.")); return;}
 	if(!ProjectileBlueprint) {UE_LOG(LogTemp, Error, TEXT("Projectile not set in Tank_BP.")); return; }
 
-	// Get the Socket Location and Rotation
-	FVector SocketLocation = Barrel->GetSocketLocation( FName(TEXT("BarrelEnd")) );
-	FRotator SocketRotation = Barrel->GetSocketRotation( FName(TEXT("BarrelEnd")) );
+	bool bIsReloaded = ( FPlatformTime::Seconds() - LastFireTime ) > ReloadTimeInSeconds;
 
-	// Spawn Projectile_BP (set in Tank_BP) at Socket Location
-	auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, SocketLocation, SocketRotation);
-	Projectile->LaunchProjectile(LaunchSpeed);
+	if (bIsReloaded)
+	{
+		// Get the Socket Location and Rotation
+		FVector SocketLocation = Barrel->GetSocketLocation( FName(TEXT("BarrelEnd")) );
+		FRotator SocketRotation = Barrel->GetSocketRotation( FName(TEXT("BarrelEnd")) );
+
+		// Spawn Projectile_BP (set in Tank_BP) at Socket Location
+		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, SocketLocation, SocketRotation);
+		Projectile->LaunchProjectile(LaunchSpeed);
+
+		// Set the last fire time to current time
+		LastFireTime = FPlatformTime::Seconds();
+	}
 }
 
 // This function is called by the Tank_BP
