@@ -55,7 +55,7 @@ ATank* ATankAIController::GetPlayerTank() const
 
 void ATankAIController::CheckForPosessedTankAndPlayerTank()
 {
-    // Check if both AI Tank and PlayerTank are there and found
+    // Check if both AI Tank and PlayerTank are there and found, just for protection
     if (! (Cast<ATank>(GetPawn()) && Cast<ATank>(GetPawn())) )
     {
         UE_LOG(LogTemp, Error, TEXT("TankAIContoller-hc hasn't found a tank to posess or hasn't found the PlayerTank. Protection from null ptr."));

@@ -28,6 +28,4 @@ void AProjectile::LaunchProjectile(float LaunchSpeed)
 {
 	ProjectileMovementComponent->SetVelocityInLocalSpace(FVector::ForwardVector * LaunchSpeed);
 	ProjectileMovementComponent->Activate();
-
-	UE_LOG(LogTemp, Warning, TEXT("launchin projectile at: %f"), LaunchSpeed );
 }
