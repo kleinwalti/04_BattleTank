@@ -19,6 +19,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void SetThrottle(float Throttle);
 
-	// TODO: Clamp the values, in case we give the player the possibility to change the sensitivity of controls
+	// The Maximum Throttle in Newton
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	float TrackMaxDrivingForce = 80000000.f;	// TODO: Find sensible starting value?
 	
 };

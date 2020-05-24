@@ -19,5 +19,5 @@ public:
 private:
 	// How fast the turret can rotate as a maximum, in degrees per second
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
-	float MaxRotationSpeed = 60.f;	// TODO: Change to sensible starting value
+	float MaxRotationSpeed = 10.f;	// TODO: Change to sensible starting value
 };
