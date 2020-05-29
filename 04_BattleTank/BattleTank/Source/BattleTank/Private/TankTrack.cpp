@@ -5,7 +5,7 @@
 
 void UTankTrack::SetThrottle(float Throttle)
 {
-    UE_LOG(LogTemp, Warning, TEXT("%s Throttle is: %f"), *GetName(), Throttle );
+    // UE_LOG(LogTemp, Warning, TEXT("%s Throttle is: %f"), *GetName(), Throttle );
 
     // TODO: Clamp the values, in case we give the player the possibility to change the sensitivity of controls
 

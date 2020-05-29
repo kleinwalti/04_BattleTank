@@ -3,6 +3,7 @@
 #include "Projectile.h"
 #include "TankAimingComponent.h"
 #include "TankBarrel.h"
+#include "TankMovementComponent.h"
 #include "Tank.h"
 
 // Sets default values
@@ -14,6 +15,7 @@ ATank::ATank()
 	// Creates the C++ Class UTankAimingComponent(inherited from UActorComponent) named "Aiming Component" in the Tank_BP ..
 	// .. and assign it to the variable 'TankAimingComponent'
 	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(TEXT("Aiming Component"));
+	// TankMovementComponent = CreateDefaultSubobject<UTankMovementComponent>(TEXT("Movement Component"));	// TODO: Remove, because not needed anymore
 }
 
 // Called when the game starts or when spawned
