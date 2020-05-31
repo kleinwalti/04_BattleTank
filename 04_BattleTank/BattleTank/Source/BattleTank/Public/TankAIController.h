@@ -24,5 +24,7 @@ private:
 	ATank* PosessedTank = nullptr;
 	ATank* PlayerTank = nullptr;
 	ATank* GetPlayerTank() const;
+
+	float AcceptanceRadius = 3000.f; // TODO: check if correct range (cm?)
 	
 };

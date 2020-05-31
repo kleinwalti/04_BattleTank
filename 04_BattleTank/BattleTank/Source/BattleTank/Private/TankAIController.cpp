@@ -22,6 +22,9 @@ void ATankAIController::Tick( float DeltaSeconds )
     // only if Posessed- and Player-Tank are found:
     if (PosessedTank && PlayerTank)
     {
+        // Move towards Player Tank location
+        MoveToActor(PlayerTank, AcceptanceRadius);
+
         // Aim at the Player Tank location
         PosessedTank->AimAt(PlayerTank->GetActorLocation());
 
