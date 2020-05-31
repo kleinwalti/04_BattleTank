@@ -17,20 +17,24 @@ class BATTLETANK_API UTankMovementComponent : public UNavMovementComponent
 	GENERATED_BODY()
 	
 public:
-	/** path following: request new velocity */
-	virtual void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
-
-
-	UFUNCTION ( BlueprintCallable, Category = Setup)
+	// Get Reference to left and right track
+	UFUNCTION ( BlueprintCallable, Category = "Setup")
 	void InitializeTracks(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet);
 
-	UFUNCTION ( BlueprintCallable, Category = Input)
+	// Forward Movement Function
+	UFUNCTION ( BlueprintCallable, Category = "Input")
 	void IntendMoveForward(float Throw);
 
-	UFUNCTION ( BlueprintCallable, Category = Input)
+	// Rotation Function
+	UFUNCTION ( BlueprintCallable, Category = "Input")
 	void IntendTurnRight(float Throw);
 
 private:
+	// Variables for left and right track
 	UTankTrack* LeftTrack = nullptr;
 	UTankTrack* RightTrack = nullptr;
+
+	// This function is called from the pathfinding logic by the AI Controller.
+		// The pathfinding logic is called by MoveToActor() in the Tank AI Controller
+	virtual void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
 };

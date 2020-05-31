@@ -21,6 +21,6 @@ public:
 
 	// The Maximum Throttle in Newton
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
-	float TrackMaxDrivingForce = 80000000.f;	// TODO: Find sensible starting value?
+	float TrackMaxDrivingForce = 40000000.f;	// TODO: Find sensible starting value?
 	
 };
