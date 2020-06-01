@@ -80,5 +80,5 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector &HitLocation, FVect
 
 ATank* ATankPlayerController::GetControlledTank() const
 {
-    return Cast<ATank>(GetPawn());
+    return Cast<ATank>( GetPawn() );
 }
