@@ -14,7 +14,7 @@ ATank::ATank()
 
 	// Creates the C++ Class UTankAimingComponent(inherited from UActorComponent) named "Aiming Component" in the Tank_BP ..
 	// .. and assign it to the variable 'TankAimingComponent'
-	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(TEXT("Aiming Component"));
+	// TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(TEXT("Aiming Component"));	// Remove, because not needed anymore. Is now added manually
 	// TankMovementComponent = CreateDefaultSubobject<UTankMovementComponent>(TEXT("Movement Component"));	// TODO: Remove, because not needed anymore
 }
 
@@ -24,18 +24,25 @@ void ATank::BeginPlay()
 	Super::BeginPlay();
 }
 
+// TODO: I think he deleted this one
 // Called to bind functionality to input
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+// TODO: We don't know what a TankAimingComponent is at the moment.
+//	PlayerController could either tell TankAimingComponent directly to aim or we somehow pass a TankAimingComponent back to the Tank
 void ATank::AimAt(FVector HitLocation)
 {
+	// Protection from null-ptr (now needed, because TankAimingComponent not created in constructer of tank.cpp)
+	if (!TankAimingComponent) { UE_LOG(LogTemp, Error, TEXT("No TankAimingComponent found")); return; }
 	// Delegating the aiming to the TankAimingComponent, which is from type UTankAimingComponent and the variable is assigned at begin play.
 	TankAimingComponent->AimAt(HitLocation, LaunchSpeed);
 }
 
+// Move this function to Tank Aiming Component and pass Projectile towards TAC
+// Then only call this function here to be called in the TAC
 void ATank::Fire()
 {
 	// Protection from nullptr (maybe not needed for ProjectileBlueprint Variable)
@@ -59,32 +66,15 @@ void ATank::Fire()
 	}
 }
 
-// This function is called by the Tank_BP
-void ATank::SetBarrelReference(UTankBarrel* BarrelToSet)
+void ATank::SetTankAimingComponentReferenceForTankCpp(UTankAimingComponent* TankAimingComponentToSet, UTankBarrel* BarrelToSet)
 {
-	if (!BarrelToSet) {UE_LOG(LogTemp, Error, TEXT("%s reports: Tank.cpp-SetBarrelReference: BarrelToSet is not set! Check Tank_BP BeginPlay maybe?"), *GetOwner()->GetName());}
-	// .. and when the Barrel is set in BP then pass it to the SetBarrelReference function in the TankAimingComponent
-	TankAimingComponent->SetBarrelReference(BarrelToSet);
+	// Protection
+	if (!TankAimingComponentToSet) {UE_LOG(LogTemp, Error, TEXT("%s reports: NoTankAimingComponentToSet! Check Tank_BP BeginPlay maybe?"), *GetOwner()->GetName());}
+	
+	// TankAimingComponentToSet is passed in via blueprint
+	TankAimingComponent = TankAimingComponentToSet;
 
-
-	// But also keep a local Barrel reference in the ATank class.
+	// Just to check if it works: Give the Tank class also a reference to what a barrel is:
+		// TODO: If I keep this inside, change name of function!!!
 	Barrel = BarrelToSet;
-
-	// so this is what I think is happening:
-	// We setup the function in the Tank.h to be called by blueprint and we call this function via blueprint in the Tank_BP.
-	// Because this function needs the UStaticMeshComponent* BarrelToSet to be passed into, we pass the Barrel-Component into the function, which is a UStaticMeshComponent
-
-	// The function in the Tank.cpp now has the Barrel as the BarrelToSet passed into the fcuntion.
-	// All it does now is to call the SetBarrelReference function in the TankAimingComponent and passing th BarrelToSet (which is the Barrel Component)
-
-	// All the SetBarrelReference function in the TankAimingComponent does is setting the Barrel (which is defined in the TankAimingComponent) to be the BarrelToSet (which is the actual Barrel-Component)
-
-	// So by all this we achieved the variable Barrel in the TankAimingComponent to be our actual Barrel-Component
-}
-
-void ATank::SetTurretReference(UTankTurret* TurretToSet)
-{
-	if (!TurretToSet) {UE_LOG(LogTemp, Error, TEXT("%s reports: Tank.cpp-SetTurretReference: TurretToSet is not set! Check Tank_BP BeginPlay maybe?"), *GetOwner()->GetName());}
-
-	TankAimingComponent->SetTurretReference(TurretToSet);
 }

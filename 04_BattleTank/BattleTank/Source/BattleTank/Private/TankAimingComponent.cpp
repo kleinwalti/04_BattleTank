@@ -12,27 +12,18 @@ UTankAimingComponent::UTankAimingComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
-
-	// ...
 }
-
 
 // Called when the game starts
 void UTankAimingComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
 }
-
 
 // Called every frame
 void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
@@ -99,15 +90,12 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	Turret->RotateWithRelativeSpeed(DeltaRotator.Yaw);
 }
 
-// This function is called by the SetBarrelReference function in the Tank.cpp which is called by the Tank_BP
-void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
+void UTankAimingComponent::InitializeAimingReference(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
 {
-	if (!BarrelToSet) {UE_LOG(LogTemp, Error, TEXT("TankAimingComponent.cpp-SetBarrelReference(): I did not receive any BarrelToSet! Careful, null-pointer!")); return; }
-	Barrel = BarrelToSet;
-}
+	// Protection from null-pointer
+	if (!BarrelToSet || !TurretToSet) {UE_LOG(LogTemp, Error, TEXT("TankAimingComponent.cpp-InitializeAimingReference(): I did not receive any Barrel or Turret ToSet! Careful, null-pointer!")); return; }
 
-void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
-{
-	if (!TurretToSet) {UE_LOG(LogTemp, Error, TEXT("TankAimingComponent.cpp-SetTurretReference(): I did not receive any TurretToSet! Careful, null-pointer!")); return; }
+	// Set the Barrel and the Turret Reference
+	Barrel = BarrelToSet;
 	Turret = TurretToSet;
 }

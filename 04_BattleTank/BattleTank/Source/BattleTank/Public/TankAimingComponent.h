@@ -26,16 +26,17 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
 	// Sets default values for this component's properties
 	UTankAimingComponent();
 
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 	void AimAt(FVector HitLocation, float LaunchSpeed);
-	// We get the Reference of the Barrel via Blueprint according to the SetBarrelReference() function in the Tank.h
-	void SetBarrelReference(UTankBarrel* BarrelToSet);
-	void SetTurretReference(UTankTurret* TurretToSet);
+
+	// Sets the Reference for the Barrel and the Turret
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	void InitializeAimingReference(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
 
 protected:
 	// Called when the game starts
@@ -50,5 +51,4 @@ private:
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
 	void MoveBarrelTowards(FVector AimDirection);
-
 };
