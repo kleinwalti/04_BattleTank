@@ -34,8 +34,9 @@ public:
 	TSubclassOf<AProjectile> ProjectileBlueprint = nullptr;
 
 	// Give a reference to the TankAimingComponent via Blueprint, so the PlayerController can call the Aim() function on the tank and doesn't have to call any subclasses
-	UFUNCTION(BlueprintCallable, Category = "Setup")
-	void SetTankAimingComponentReferenceForTankCpp(UTankAimingComponent* TankAimingComponentToSet, UTankBarrel* BarrelToSet);
+	// This is just my personal code
+	// UFUNCTION(BlueprintCallable, Category = "Setup")
+	// void SetTankAimingComponentReferenceForTankCpp(UTankAimingComponent* TankAimingComponentToSet, UTankBarrel* BarrelToSet);
 
 protected:
 	// Called when the game starts or when spawned

@@ -16,12 +16,15 @@ ATank::ATank()
 	// .. and assign it to the variable 'TankAimingComponent'
 	// TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(TEXT("Aiming Component"));	// Remove, because not needed anymore. Is now added manually
 	// TankMovementComponent = CreateDefaultSubobject<UTankMovementComponent>(TEXT("Movement Component"));	// TODO: Remove, because not needed anymore
+
+	UE_LOG(LogTemp, Warning, TEXT("[%s] DONKEY: Constructer is called in C++."), *GetName());
 }
 
 // Called when the game starts or when spawned
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
+	UE_LOG(LogTemp, Warning, TEXT("[%s] DONKEY: BeginPlay is called in C++."), *GetName());
 }
 
 // TODO: I think he deleted this one
@@ -36,6 +39,7 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ATank::AimAt(FVector HitLocation)
 {
 	// Protection from null-ptr (now needed, because TankAimingComponent not created in constructer of tank.cpp)
+	// uncomment next line to make it work?
 	if (!TankAimingComponent) { UE_LOG(LogTemp, Error, TEXT("No TankAimingComponent found")); return; }
 	// Delegating the aiming to the TankAimingComponent, which is from type UTankAimingComponent and the variable is assigned at begin play.
 	TankAimingComponent->AimAt(HitLocation, LaunchSpeed);
@@ -66,6 +70,8 @@ void ATank::Fire()
 	}
 }
 
+/*
+This is my personal code
 void ATank::SetTankAimingComponentReferenceForTankCpp(UTankAimingComponent* TankAimingComponentToSet, UTankBarrel* BarrelToSet)
 {
 	// Protection
@@ -78,3 +84,4 @@ void ATank::SetTankAimingComponentReferenceForTankCpp(UTankAimingComponent* Tank
 		// TODO: If I keep this inside, change name of function!!!
 	Barrel = BarrelToSet;
 }
+*/
