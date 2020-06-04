@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "TankAIController.generated.h"
+//Dependent of MovementComponent through pathfinding
 
 class ATank;	// forward declaration instead of #include "Tank.h"
 

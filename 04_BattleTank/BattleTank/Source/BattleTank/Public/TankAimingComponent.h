@@ -43,7 +43,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadOnly)
-	EFiringState FiringState = EFiringState::Reloading;	
+	EFiringState FiringState = EFiringState::Aiming;	
 
 private:
 	// define what a Barrel is. In this case, we define the Barrel to be a UStaticMeshComponent and we set it with our

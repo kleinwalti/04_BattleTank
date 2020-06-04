@@ -4,21 +4,25 @@
 #include "GameFramework/Pawn.h"
 #include "DrawDebugHelpers.h"
 #include "Tank.h"
+#include "TankAimingComponent.h"
 #include "TankPlayerController.h"
 
 void ATankPlayerController::BeginPlay()
 {
     Super::BeginPlay();
+    // Get the controlled Tank and check if it exists. If not, create a log!
     ATank* PosessedTank = GetControlledTank();
     
-    if(PosessedTank)
+    if(PosessedTank) { UE_LOG(LogTemp, Warning, TEXT("The tank, posessed by TankPlayerController is: %s"), *PosessedTank->GetName()); } // can be deleted later
+    else { UE_LOG(LogTemp, Error, TEXT("NO PLAYER TANK FOUND! - TankPlayerController.cpp")); }
+
+    // Get the Aiming component. If it exists, call the event, if not, create a log
+    UTankAimingComponent* AimingComponent = GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
+    if (AimingComponent)
     {
-        UE_LOG(LogTemp, Warning, TEXT("The tank, posessed by TankPlayerController is: %s"), *PosessedTank->GetName());  // can be deleted later
+        FoundTankAimingComponent(AimingComponent);
     }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("NO PLAYER TANK FOUND! - TankPlayerController.cpp"));
-    }
+    else { UE_LOG(LogTemp, Error, TEXT("Inside TankPlayerController-BeginPlay(): No AimingComponent found!")) }
 }
 
 void ATankPlayerController::Tick(float DeltaSeconds)

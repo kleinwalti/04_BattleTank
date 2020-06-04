@@ -3,7 +3,6 @@
 #include "Projectile.h"
 #include "TankAimingComponent.h"
 #include "TankBarrel.h"
-#include "TankMovementComponent.h"
 #include "Tank.h"
 
 // Sets default values
@@ -15,16 +14,12 @@ ATank::ATank()
 	// Creates the C++ Class UTankAimingComponent(inherited from UActorComponent) named "Aiming Component" in the Tank_BP ..
 	// .. and assign it to the variable 'TankAimingComponent'
 	// TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(TEXT("Aiming Component"));	// Remove, because not needed anymore. Is now added manually
-	// TankMovementComponent = CreateDefaultSubobject<UTankMovementComponent>(TEXT("Movement Component"));	// TODO: Remove, because not needed anymore
-
-	UE_LOG(LogTemp, Warning, TEXT("[%s] DONKEY: Constructer is called in C++."), *GetName());
 }
 
 // Called when the game starts or when spawned
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("[%s] DONKEY: BeginPlay is called in C++."), *GetName());
 }
 
 // TODO: I think he deleted this one
@@ -40,13 +35,13 @@ void ATank::AimAt(FVector HitLocation)
 {
 	// Protection from null-ptr (now needed, because TankAimingComponent not created in constructer of tank.cpp)
 	// uncomment next line to make it work?
-	if (!TankAimingComponent) { UE_LOG(LogTemp, Error, TEXT("No TankAimingComponent found")); return; }
+	if (!ensure(TankAimingComponent)) { UE_LOG(LogTemp, Error, TEXT("No TankAimingComponent found")); return; }
 	// Delegating the aiming to the TankAimingComponent, which is from type UTankAimingComponent and the variable is assigned at begin play.
 	TankAimingComponent->AimAt(HitLocation, LaunchSpeed);
 }
 
-// Move this function to Tank Aiming Component and pass Projectile towards TAC
-// Then only call this function here to be called in the TAC
+// TODO: Move this function to Tank Aiming Component and pass Projectile towards TAC
+// Then only call this function here to be called in the TAC or let it be handled by the TAC all together (not using the tank)
 void ATank::Fire()
 {
 	// Protection from nullptr (maybe not needed for ProjectileBlueprint Variable)

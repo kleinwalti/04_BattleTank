@@ -9,6 +9,7 @@
 
 // Forward Declaration instead of #include "Tank.h"
 class ATank;
+class UTankAimingComponent;
 
 UCLASS()
 class BATTLETANK_API ATankPlayerController : public APlayerController
@@ -22,6 +23,9 @@ public:
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	ATank* GetControlledTank() const;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
+	void FoundTankAimingComponent(UTankAimingComponent* AimingComponentReference);
 
 private:
 	void AimTowardsCrosshair() const;
