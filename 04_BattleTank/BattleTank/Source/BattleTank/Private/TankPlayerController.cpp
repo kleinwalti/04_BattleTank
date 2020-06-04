@@ -29,14 +29,16 @@ void ATankPlayerController::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
+    // Aim to Crosshair every frame
     AimTowardsCrosshair();
 }
 
 // Call the other two functions and then delegate aiming to the tank by passing the HitLocation
 void ATankPlayerController::AimTowardsCrosshair() const
 {
+    // Define variable Hit Location and protect the pointer
     FVector HitLocation;
-    if (!GetControlledTank()) { UE_LOG(LogTemp, Error, TEXT("No Tank is controlled by TankPlayerController, therefore no aiming. - AimTowardsCrosshair()")); return; }
+    if (!ensure(GetControlledTank())) { UE_LOG(LogTemp, Error, TEXT("No Tank is controlled by TankPlayerController, therefore no aiming. - AimTowardsCrosshair()")); return; }
 
     // Get the HitLocation ..
     if(GetSightRayHitLocation(HitLocation))

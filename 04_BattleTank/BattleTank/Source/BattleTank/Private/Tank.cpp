@@ -20,6 +20,9 @@ ATank::ATank()
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	// TODO: Delete when finished with refactoring, just needed to get it working for now:
+	TankAimingComponent = FindComponentByClass<UTankAimingComponent>();
 }
 
 // TODO: I think he deleted this one
