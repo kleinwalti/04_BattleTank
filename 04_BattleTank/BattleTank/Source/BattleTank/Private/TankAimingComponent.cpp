@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "TankBarrel.h"
 #include "TankTurret.h"
+// maybe #include "Projectile.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -26,14 +27,14 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
+void UTankAimingComponent::AimAt(FVector HitLocation)
 {
 	FString TankName = GetOwner()->GetName();
 	// FVector BarrelLocation = Barrel->GetComponentLocation();
 	// UE_LOG(LogTemp, Warning, TEXT("%s is aiming. From: %s towards: %s"), *TankName, *BarrelLocation.ToString(), *HitLocation.ToString());
 	// UE_LOG(LogTemp, Warning, TEXT("%s reports: My LaunchSpeed is: %f"), *TankName, LaunchSpeed);
 
-	if ( !Barrel ) { UE_LOG(LogTemp, Error, TEXT("ERROR in AimAt()-UTankAimingComponent")); return; }
+	if ( !ensure(Barrel) ) { UE_LOG(LogTemp, Error, TEXT("ERROR in AimAt()-UTankAimingComponent")); return; }
 	FVector OutLaunchVelocity;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("BarrelEnd"));
 
@@ -50,7 +51,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 		FCollisionResponseParams::DefaultResponseParam,
 		TArray<AActor*>(),
 		false
-		)	// TODO: set draw debug line to false
+		)	// TODO: set draw debug line to false and remove standard parameters if not used
 	)
 	{
 		FVector AimDirection = OutLaunchVelocity.GetSafeNormal();
@@ -98,4 +99,29 @@ void UTankAimingComponent::InitializeAimingReference(UTankBarrel* BarrelToSet, U
 	// Set the Barrel and the Turret Reference
 	Barrel = BarrelToSet;
 	Turret = TurretToSet;
+}
+
+void ATank::Fire()
+{
+	// Protection from nullptr (maybe not needed for ProjectileBlueprint Variable)
+	if(!ensure(Barrel)) { return; }
+	if(!ensure(ProjectileBlueprint)) { return; }
+
+	// Set bIsReloaded true after ReloadTime
+	bool bIsReloaded = ( FPlatformTime::Seconds() - LastFireTime ) > ReloadTimeInSeconds;
+
+	// When reloaded ..
+	if (bIsReloaded)
+	{
+		// Get the Socket Location and Rotation
+		FVector SocketLocation = Barrel->GetSocketLocation( FName(TEXT("BarrelEnd")) );
+		FRotator SocketRotation = Barrel->GetSocketRotation( FName(TEXT("BarrelEnd")) );
+
+		// Spawn Projectile_BP (set in Tank_BP) at Socket Location
+		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, SocketLocation, SocketRotation);
+		Projectile->LaunchProjectile(LaunchSpeed);
+
+		// Set the last fire time to current time
+		LastFireTime = FPlatformTime::Seconds();
+	}
 }

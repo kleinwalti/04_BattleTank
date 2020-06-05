@@ -17,6 +17,7 @@ enum class EFiringState : uint8
 
 // Forward Declaration
 class UTankBarrel;
+class AProjectile;
 class UTankTurret;
 
 // Is handling the Tank Aiming
@@ -32,11 +33,22 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void AimAt(FVector HitLocation, float LaunchSpeed);
+	// Function called by TankPlayerController for aiming
+	void AimAt(FVector HitLocation);
 
 	// Sets the Reference for the Barrel and the Turret
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void InitializeAimingReference(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
+
+	// Makes it possible to set the Projectile_BP in Blueprint for this variable 'ProjectileBlueprint' to be used in C++
+	// TODO Set the Proectile_BP in BLueprint
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AProjectile> ProjectileBlueprint = nullptr;
+
+	// Fire Projectile, called by Input event in Blueprint. TODO: Which Blueprint is it called from?
+	// TODO: Rewire in Blueprint!
+	UFUNCTION(BlueprintCallable)
+	void Fire();
 
 protected:
 	// Called when the game starts
@@ -51,4 +63,15 @@ private:
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
 	void MoveBarrelTowards(FVector AimDirection);
+
+	// Launch Speed of the Projectile, used by the AimAt() function
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	float LaunchSpeed = 4000.f; // TODO: Change this to a sensible starting value
+
+	// Time needed to Reload a Projectile
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	float ReloadTimeInSeconds = 3.f;
+
+	// Initialize LastFireTime to 0
+	double LastFireTime = 0;
 };

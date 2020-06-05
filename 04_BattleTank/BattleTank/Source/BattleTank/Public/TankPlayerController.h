@@ -2,13 +2,11 @@
 
 #pragma once
 
-// #include "Tank.h"
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h"	// this needs to be the last #include
 
-// Forward Declaration instead of #include "Tank.h"
-class ATank;
+// Forward Declarations
 class UTankAimingComponent;
 
 UCLASS()
@@ -21,9 +19,6 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 protected:
-	UFUNCTION(BlueprintCallable, Category = "Setup")
-	ATank* GetControlledTank() const;
-
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
 	void FoundTankAimingComponent(UTankAimingComponent* AimingComponentReference);
 

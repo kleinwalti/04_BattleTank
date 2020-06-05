@@ -7,7 +7,8 @@
 #include "TankAIController.generated.h"
 //Dependent of MovementComponent through pathfinding
 
-class ATank;	// forward declaration instead of #include "Tank.h"
+// Forward declarations
+class UTankAimingComponent;
 
 UCLASS()
 class BATTLETANK_API ATankAIController : public AAIController
@@ -20,12 +21,8 @@ public:
 	virtual void Tick( float DeltaSeconds ) override;
 
 private:
-
-	void CheckForPosessedTankAndPlayerTank();
-	ATank* PosessedTank = nullptr;
-	ATank* PlayerTank = nullptr;
-	ATank* GetPlayerTank() const;
-
 	float AcceptanceRadius = 3000.f; // TODO: check if correct range (cm?)
+
+	UTankAimingComponent* AimingComponent = nullptr;
 	
 };

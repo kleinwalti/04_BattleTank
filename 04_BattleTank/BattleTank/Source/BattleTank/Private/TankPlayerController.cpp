@@ -3,26 +3,17 @@
 #include "Engine/World.h"
 #include "GameFramework/Pawn.h"
 #include "DrawDebugHelpers.h"
-#include "Tank.h"
 #include "TankAimingComponent.h"
 #include "TankPlayerController.h"
 
 void ATankPlayerController::BeginPlay()
 {
     Super::BeginPlay();
-    // Get the controlled Tank and check if it exists. If not, create a log!
-    ATank* PosessedTank = GetControlledTank();
     
-    if(PosessedTank) { UE_LOG(LogTemp, Warning, TEXT("The tank, posessed by TankPlayerController is: %s"), *PosessedTank->GetName()); } // can be deleted later
-    else { UE_LOG(LogTemp, Error, TEXT("NO PLAYER TANK FOUND! - TankPlayerController.cpp")); }
-
-    // Get the Aiming component. If it exists, call the event, if not, create a log
-    UTankAimingComponent* AimingComponent = GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
-    if (AimingComponent)
-    {
-        FoundTankAimingComponent(AimingComponent);
-    }
-    else { UE_LOG(LogTemp, Error, TEXT("Inside TankPlayerController-BeginPlay(): No AimingComponent found!")) }
+    // Get the Aiming component and assign it to the variable. If it exists, call the event, if not, create a log
+    UTankAimingComponent* AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+    if (!ensure(AimingComponent)) { return; }
+    FoundTankAimingComponent(AimingComponent);
 }
 
 void ATankPlayerController::Tick(float DeltaSeconds)
@@ -33,18 +24,23 @@ void ATankPlayerController::Tick(float DeltaSeconds)
     AimTowardsCrosshair();
 }
 
-// Call the other two functions and then delegate aiming to the tank by passing the HitLocation
+// Call the other two functions and then delegate aiming TankAimingComponent by passing the HitLocation
 void ATankPlayerController::AimTowardsCrosshair() const
 {
-    // Define variable Hit Location and protect the pointer
+    // Define variable Hit Location
     FVector HitLocation;
-    if (!ensure(GetControlledTank())) { UE_LOG(LogTemp, Error, TEXT("No Tank is controlled by TankPlayerController, therefore no aiming. - AimTowardsCrosshair()")); return; }
 
-    // Get the HitLocation ..
+    // Find again the AimingComponent (in case we died, we will posess a different pawn now)
+    UTankAimingComponent* AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+
+    // Protect the UTankAimingComponent pointer
+    if (!ensure(AimingComponent)) { return; }
+
+    // Get the HitLocation, and when we have it ..
     if(GetSightRayHitLocation(HitLocation))
     {
-        // .. , but delegate the actual aiming to the Tank, and then to the TankAimingComponent
-        GetControlledTank()->AimAt(HitLocation);
+        // .. , but delegate the actual aiming to the TankAimingComponent
+        AimingComponent->AimAt(HitLocation);
     }
 }
 
@@ -82,9 +78,4 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector &HitLocation, FVect
         HitLocation = FVector(0);
         return false;
     }
-}
-
-ATank* ATankPlayerController::GetControlledTank() const
-{
-    return Cast<ATank>( GetPawn() );
 }
