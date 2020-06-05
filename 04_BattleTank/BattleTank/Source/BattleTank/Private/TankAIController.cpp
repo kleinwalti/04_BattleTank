@@ -18,7 +18,7 @@ void ATankAIController::Tick( float DeltaSeconds )
     Super::Tick ( DeltaSeconds );
 
     // Get the Pawn the Player is posessing
-    PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
+    APawn* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
 
     // Check if Player-Pawn and AimingComponent are found, if not return
     if (! ensure(PlayerPawn || AimingComponent) ) { return; }

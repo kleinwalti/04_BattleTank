@@ -41,21 +41,19 @@ public:
 	void InitializeAimingReference(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
 
 	// Makes it possible to set the Projectile_BP in Blueprint for this variable 'ProjectileBlueprint' to be used in C++
-	// TODO Set the Proectile_BP in BLueprint
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AProjectile> ProjectileBlueprint = nullptr;
 
-	// Fire Projectile, called by Input event in Blueprint. TODO: Which Blueprint is it called from?
-	// TODO: Rewire in Blueprint!
+	// Fire Projectile, called by Input event in Tank_BP Input Setup
 	UFUNCTION(BlueprintCallable)
 	void Fire();
 
 protected:
-	// Called when the game starts
+	// Called when the game starts.
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadOnly)
-	EFiringState FiringState = EFiringState::Aiming;	
+	EFiringState FiringState = EFiringState::Reloading;	
 
 private:
 	// define what a Barrel is. In this case, we define the Barrel to be a UStaticMeshComponent and we set it with our

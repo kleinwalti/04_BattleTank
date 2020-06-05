@@ -5,26 +5,39 @@
 #include "Kismet/GameplayStatics.h"
 #include "TankBarrel.h"
 #include "TankTurret.h"
-// maybe #include "Projectile.h"
+#include "Projectile.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 }
 
 // Called when the game starts
 void UTankAimingComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Set the last fire time to BeginPlay time initially, so you have to reload first before being able to fire
+	LastFireTime = FPlatformTime::Seconds();
 }
 
 // Called every frame
 void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if ( ( FPlatformTime::Seconds() - LastFireTime ) > ReloadTimeInSeconds )
+	{
+		FiringState = EFiringState::Aiming;
+	}
+	else
+	{
+		FiringState = EFiringState::Reloading;
+	}
+	
 }
 
 void UTankAimingComponent::AimAt(FVector HitLocation)
@@ -101,17 +114,16 @@ void UTankAimingComponent::InitializeAimingReference(UTankBarrel* BarrelToSet, U
 	Turret = TurretToSet;
 }
 
-void ATank::Fire()
+void UTankAimingComponent::Fire()
 {
-	// Protection from nullptr (maybe not needed for ProjectileBlueprint Variable)
-	if(!ensure(Barrel)) { return; }
-	if(!ensure(ProjectileBlueprint)) { return; }
+	// Protection of Barrel and ProjectileBlueprint
+	if(!ensure(Barrel || ProjectileBlueprint)) { return; }
 
 	// Set bIsReloaded true after ReloadTime
-	bool bIsReloaded = ( FPlatformTime::Seconds() - LastFireTime ) > ReloadTimeInSeconds;
+	// bool bIsReloaded = ( FPlatformTime::Seconds() - LastFireTime ) > ReloadTimeInSeconds;
 
 	// When reloaded ..
-	if (bIsReloaded)
+	if (FiringState == EFiringState::Aiming)
 	{
 		// Get the Socket Location and Rotation
 		FVector SocketLocation = Barrel->GetSocketLocation( FName(TEXT("BarrelEnd")) );
