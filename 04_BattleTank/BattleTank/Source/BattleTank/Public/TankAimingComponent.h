@@ -60,7 +60,12 @@ private:
 	// SetBarrelReference function, which is called in blueprint and in blueprint we pass in the getBarrel reference.
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
-	void MoveBarrelTowards(FVector AimDirection);
+	void MoveBarrelTowards();	// ( FVector AimDirection )
+
+	bool IsBarrelMoving();
+
+	// needed to be a member variable to be used in the IsBarrelMoving() function.
+	FVector AimDirection;
 
 	// Launch Speed of the Projectile, used by the AimAt() function
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
