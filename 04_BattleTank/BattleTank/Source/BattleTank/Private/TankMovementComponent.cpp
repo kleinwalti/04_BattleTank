@@ -7,7 +7,7 @@
 void UTankMovementComponent::InitializeTracks(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet)
 {
     // Pointer Protection
-    if ( !LeftTrackToSet || !RightTrackToSet) {UE_LOG(LogTemp, Error, TEXT("No Left or No Right Track to Set! nullptr prot.")); return; }   // actually not really needed, but hey, some info if something is not right
+    if ( !ensure(LeftTrackToSet) || !ensure(RightTrackToSet)) {UE_LOG(LogTemp, Error, TEXT("No Left or No Right Track to Set! nullptr prot.")); return; }   // actually not really needed, but hey, some info if something is not right
     
     // Setting the Variables to be the tracks passed in via blueprint
     LeftTrack = LeftTrackToSet;
@@ -36,7 +36,7 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
 void UTankMovementComponent::IntendMoveForward(float Throw)
 {
     // Pointer Protection
-    if ( !LeftTrack || !RightTrack) {UE_LOG(LogTemp, Error, TEXT("No Left or No Right Track! nullptr prot.")); return; }
+    if ( !ensure(LeftTrack || RightTrack)) {UE_LOG(LogTemp, Error, TEXT("No Left or No Right Track! nullptr prot.")); return; }
 
     // Add a force to both tracks simultaneous (by calling SetThrottle() )
     LeftTrack->SetThrottle(Throw);
@@ -47,7 +47,7 @@ void UTankMovementComponent::IntendMoveForward(float Throw)
 void UTankMovementComponent::IntendTurnRight(float Throw)
 {
     // Pointer Protection
-    if ( !LeftTrack || !RightTrack) {UE_LOG(LogTemp, Error, TEXT("No Left or No Right Track! nullptr prot.")); return; }
+    if ( !ensure(LeftTrack || RightTrack)) {UE_LOG(LogTemp, Error, TEXT("No Left or No Right Track! nullptr prot.")); return; }
 
     // Add opposing forces to left and right track (by calling SetThrottle() )
     LeftTrack->SetThrottle(Throw);

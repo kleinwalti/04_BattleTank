@@ -3,6 +3,34 @@
 
 #include "TankTrack.h"
 
+// Constructor (manually added)
+UTankTrack::UTankTrack()
+{
+    PrimaryComponentTick.bCanEverTick = true;
+}
+
+// Tick (manually added)
+void UTankTrack::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
+{
+    Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+    // Get the sideways speed with which the tracks are slipping and divide by two to get the tanks sideway speed
+    float SidewaySpeed = FVector::DotProduct( GetRightVector(), GetComponentVelocity() ) / 2;
+
+    // Calculate the opposite needed acceleration per frame v = at --> a = v/t
+    float NeededAccelerationPerFrame = - SidewaySpeed/DeltaTime;
+
+    // Calculate the force to be applied (F = ma) as a vector
+    auto TankRoot = Cast<UPrimitiveComponent> (GetOwner()->GetRootComponent() );
+    // Calculate the force to be applied (F = ma) as a vector
+    FVector SidewayForce = (TankRoot->GetMass() * NeededAccelerationPerFrame) * GetRightVector();
+
+    // Add Sideway Force to the Tank
+    TankRoot->AddForce(SidewayForce);
+
+}
+
+
 void UTankTrack::SetThrottle(float Throttle)
 {
     // UE_LOG(LogTemp, Warning, TEXT("%s Throttle is: %f"), *GetName(), Throttle );
