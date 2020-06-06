@@ -9,6 +9,15 @@ UTankTrack::UTankTrack()
     PrimaryComponentTick.bCanEverTick = true;
 }
 
+// BeginPlay (manually added)
+void UTankTrack::BeginPlay()
+{
+    Super::BeginPlay();
+
+    // Register delegate at begin play like this:
+    OnComponentHit.AddDynamic(this, &UTankTrack::OnHit);
+}
+
 // Tick (manually added)
 void UTankTrack::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
@@ -27,9 +36,13 @@ void UTankTrack::TickComponent(float DeltaTime, enum ELevelTick TickType, FActor
 
     // Add Sideway Force to the Tank
     TankRoot->AddForce(SidewayForce);
-
 }
 
+// UPrimitiveComponent* OnComponentHit,
+void UTankTrack::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+    UE_LOG(LogTemp, Warning, TEXT("Track is hitting"));
+}
 
 void UTankTrack::SetThrottle(float Throttle)
 {

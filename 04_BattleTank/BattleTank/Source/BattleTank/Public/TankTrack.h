@@ -21,6 +21,9 @@ public:
 	// Tick (manually added)
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
+	// BeginPlay (manually added)
+	virtual void BeginPlay() override;
+
 	// Sets the Throttle between -1 and +1
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void SetThrottle(float Throttle);
@@ -28,5 +31,8 @@ public:
 	// The Maximum Throttle in Newton
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	float TrackMaxDrivingForce = 40000000.f;	// TODO: Find sensible starting value?
-	
+
+private:
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };
