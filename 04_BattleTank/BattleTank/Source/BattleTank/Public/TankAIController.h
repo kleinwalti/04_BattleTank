@@ -20,9 +20,12 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick( float DeltaSeconds ) override;
 
-private:
-	float AcceptanceRadius = 3000.f; // TODO: check if correct range (cm?)
+protected:
+	// Means how close the AI tanks wants to be to the player, in cm. Somehow doesn't work when editing in BP. Edit Value in cpp or while playing game.
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float AcceptanceRadius = 8000.f;
 
+private:
 	UTankAimingComponent* AimingComponent = nullptr;
 	
 };

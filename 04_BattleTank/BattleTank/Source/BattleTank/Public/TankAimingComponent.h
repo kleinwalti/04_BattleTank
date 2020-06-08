@@ -48,12 +48,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Fire();
 
+	EFiringState GetFiringState();
+
 protected:
 	// Called when the game starts.
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadOnly)
-	EFiringState FiringState = EFiringState::Reloading;	
+	EFiringState FiringState = EFiringState::Reloading;
 
 private:
 	// define what a Barrel is. In this case, we define the Barrel to be a UStaticMeshComponent and we set it with our

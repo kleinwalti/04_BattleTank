@@ -23,12 +23,15 @@ void ATankAIController::Tick( float DeltaSeconds )
     // Check if Player-Pawn and AimingComponent are found, if not return
     if (! ensure(PlayerPawn || AimingComponent) ) { return; }
 
-    // Move towards Player Pawn location
+    // Move towards Player Pawn location, used by TankMovementComponent
     MoveToActor(PlayerPawn, AcceptanceRadius);
 
     // Aim at the Player Pawn location
     AimingComponent->AimAt(PlayerPawn->GetActorLocation());
 
-    // Fire
-    AimingComponent->Fire();
+    // Fire only when locked
+    if (AimingComponent->GetFiringState() == EFiringState::Locked)
+    {
+        AimingComponent->Fire();
+    }
 }
