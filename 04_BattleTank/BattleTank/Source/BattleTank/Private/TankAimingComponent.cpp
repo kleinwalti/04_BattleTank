@@ -30,7 +30,12 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if ( ( FPlatformTime::Seconds() - LastFireTime ) < ReloadTimeInSeconds )
+	if (RoundsLeft <= 0)
+	{
+		FiringState = EFiringState::OutOfAmmo;
+	}
+	// If still ammo left, check if Reloading, aiming or locked and set the firing state accordingly
+	else if ( ( FPlatformTime::Seconds() - LastFireTime ) < ReloadTimeInSeconds )
 	{
 		FiringState = EFiringState::Reloading;
 	}
@@ -47,6 +52,11 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 EFiringState UTankAimingComponent::GetFiringState()
 {
 	return FiringState;
+}
+
+int UTankAimingComponent::GetRoundsLeft()
+{
+	return RoundsLeft;
 }
 
 // Check if Barrel is moving to set color for crosshair
@@ -163,15 +173,17 @@ void UTankAimingComponent::Fire()
 {
 	// Protection of Barrel and ProjectileBlueprint
 	if(!ensure(Barrel || ProjectileBlueprint)) { return; }
+	UE_LOG(LogTemp, Warning, TEXT("Fire() is being called"));
 
 	// Set bIsReloaded true after ReloadTime
 	// bool bIsReloaded = ( FPlatformTime::Seconds() - LastFireTime ) > ReloadTimeInSeconds;
 
-	// When reloaded ..
+	// When reloaded and not out of ammo ..
 	if (FiringState == EFiringState::Aiming || FiringState == EFiringState::Locked)
 	{
 		// Log out firing (to help to see of other constant logs stopped or are still firing)
 		UE_LOG(LogTemp, Warning, TEXT("Fire!"));
+
 
 		// Get the Socket Location and Rotation
 		FVector SocketLocation = Barrel->GetSocketLocation( FName(TEXT("BarrelEnd")) );
@@ -179,7 +191,13 @@ void UTankAimingComponent::Fire()
 
 		// Spawn Projectile_BP (set in Tank_BP) at Socket Location
 		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, SocketLocation, SocketRotation);
+		if (!ensure(Projectile)) { UE_LOG(LogTemp, Error, TEXT("No Projectile could be spawned! Check Tank_BP -> TankAiming -> Setup if Projectile Blueprint is set to Projectile_BP")); return; }
+		
+		// Launch Projectile
 		Projectile->LaunchProjectile(LaunchSpeed);
+
+		// Reduce the remaining ammonition
+		RoundsLeft--;		
 
 		// Set the last fire time to current time
 		LastFireTime = FPlatformTime::Seconds();

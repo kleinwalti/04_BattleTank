@@ -12,7 +12,8 @@ enum class EFiringState : uint8
 {
 	Reloading,
 	Aiming,
-	Locked
+	Locked,
+	OutOfAmmo
 };
 
 // Forward Declaration
@@ -48,7 +49,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Fire();
 
+	// Used for the AI Tanks so they only fire when locked
 	EFiringState GetFiringState();
+
+	int GetRoundsLeft();
 
 protected:
 	// Called when the game starts.
@@ -56,6 +60,10 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 	EFiringState FiringState = EFiringState::Reloading;
+
+	UPROPERTY(BlueprintReadOnly)
+	int RoundsLeft = 3;
+	
 
 private:
 	// define what a Barrel is. In this case, we define the Barrel to be a UStaticMeshComponent and we set it with our
@@ -79,4 +87,5 @@ private:
 
 	// Initialize LastFireTime to 0
 	double LastFireTime = 0;
+
 };
