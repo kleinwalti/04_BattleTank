@@ -41,6 +41,8 @@ void UTankMovementComponent::IntendMoveForward(float Throw)
     // Add a force to both tracks simultaneous (by calling SetThrottle() )
     LeftTrack->SetThrottle(Throw);
     RightTrack->SetThrottle(Throw);
+
+    // UE_LOG(LogTemp, Error, TEXT("IntendMoveForward is being called"));
 }
 
 // Rotation function
@@ -52,4 +54,6 @@ void UTankMovementComponent::IntendTurnRight(float Throw)
     // Add opposing forces to left and right track (by calling SetThrottle() )
     LeftTrack->SetThrottle(Throw);
     RightTrack->SetThrottle(-Throw);
+
+    // UE_LOG(LogTemp, Error, TEXT("IntendTurnRight is being called"));
 }

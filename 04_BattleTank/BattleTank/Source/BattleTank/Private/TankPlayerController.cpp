@@ -39,8 +39,13 @@ void ATankPlayerController::AimTowardsCrosshair() const
     // Get the HitLocation, and when we have it ..
     if(GetSightRayHitLocation(HitLocation))
     {
+        // UE_LOG(LogTemp, Warning, TEXT("YES HitLocation"));
         // .. , but delegate the actual aiming to the TankAimingComponent
         AimingComponent->AimAt(HitLocation);
+    }
+    else
+    {
+        // UE_LOG(LogTemp, Warning, TEXT("NO HitLocation"));
     }
 }
 
@@ -56,9 +61,10 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation) const
     FVector CameraWorldLocation, LookVector;  // WorldLocation is CameraWorldLocation, is just needed for function, but not otherwise used
     if (DeprojectScreenPositionToWorld(ScreenLocation.X, ScreenLocation.Y, CameraWorldLocation, LookVector))
     {
-        GetLookVectorHitLocation(HitLocation, CameraWorldLocation, LookVector);
+        // Return if the LineTracing hit something or not
+        return GetLookVectorHitLocation(HitLocation, CameraWorldLocation, LookVector);
     }
-    return true;
+    return false;
 }
 
 // Do the LineTracing and return the HitLocation, if something was hit. Otherwise, return 0-Vector.

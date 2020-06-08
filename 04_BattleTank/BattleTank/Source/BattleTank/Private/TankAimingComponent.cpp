@@ -44,6 +44,7 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	}
 }
 
+// Check if Barrel is moving to set color for crosshair
 bool UTankAimingComponent::IsBarrelMoving()
 {
 	// Pointer protection
@@ -68,8 +69,8 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 	// FVector BarrelLocation = Barrel->GetComponentLocation();
 	// UE_LOG(LogTemp, Warning, TEXT("%s is aiming. From: %s towards: %s"), *TankName, *BarrelLocation.ToString(), *HitLocation.ToString());
 	// UE_LOG(LogTemp, Warning, TEXT("%s reports: My LaunchSpeed is: %f"), *TankName, LaunchSpeed);
-
 	if ( !ensure(Barrel) ) { UE_LOG(LogTemp, Error, TEXT("ERROR in AimAt()-UTankAimingComponent")); return; }
+	
 	FVector OutLaunchVelocity;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("BarrelEnd"));
 
@@ -109,6 +110,8 @@ void UTankAimingComponent::MoveBarrelTowards()	//( FVector AimDirection )
 	FRotator BarrelRotation = Barrel->GetForwardVector().Rotation();
 	FRotator AimAsRotation = AimDirection.Rotation();
 	FRotator DeltaRotator = AimAsRotation - BarrelRotation;
+
+	
 	// UE_LOG(LogTemp, Warning, TEXT("%s reports at %f"), *GetOwner()->GetName(), Time);
 	// UE_LOG(LogTemp, Warning, TEXT("BarrelRotation is: %s"), *BarrelRotation.ToString());
 
@@ -122,9 +125,22 @@ void UTankAimingComponent::MoveBarrelTowards()	//( FVector AimDirection )
 	// TODO: Ask in forum why we are doing the blueprint workaround and in blueprint give it the class and why not calling the class directly in c++?
 	// UE_LOG(LogTemp, Warning, TEXT("DeltaRotator.Pitch is: %f"), DeltaRotator.Pitch);
 	// UE_LOG(LogTemp, Warning, TEXT("DeltaRotator.Yaw is: %f"), DeltaRotator.Yaw);
-	Barrel->ElevateWithRelativeSpeed(DeltaRotator.Pitch);
-	Turret->RotateWithRelativeSpeed(DeltaRotator.Yaw);
 
+	
+	// UE_LOG(LogTemp, Warning, TEXT("DeltaTurretRotation is: %f"), DeltaTurretRotation);
+
+	// Rotate the Barrel
+	Barrel->ElevateWithRelativeSpeed(DeltaRotator.Pitch);
+
+	// Make sure Turret rotates the shortest way
+	if (DeltaRotator.Yaw > 180 || DeltaRotator.Yaw < -180)
+	{
+		Turret->RotateWithRelativeSpeed(-DeltaRotator.Yaw);
+	}
+	else
+	{
+		Turret->RotateWithRelativeSpeed(DeltaRotator.Yaw);
+	}
 
 }
 
@@ -149,6 +165,9 @@ void UTankAimingComponent::Fire()
 	// When reloaded ..
 	if (FiringState == EFiringState::Aiming || FiringState == EFiringState::Locked)
 	{
+		// Log out firing (to help to see of other constant logs stopped or are still firing)
+		UE_LOG(LogTemp, Warning, TEXT("Fire!"));
+
 		// Get the Socket Location and Rotation
 		FVector SocketLocation = Barrel->GetSocketLocation( FName(TEXT("BarrelEnd")) );
 		FRotator SocketRotation = Barrel->GetSocketRotation( FName(TEXT("BarrelEnd")) );

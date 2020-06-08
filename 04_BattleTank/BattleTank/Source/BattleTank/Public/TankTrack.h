@@ -30,9 +30,15 @@ public:
 
 	// The Maximum Throttle in Newton
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
-	float TrackMaxDrivingForce = 40000000.f;	// TODO: Find sensible starting value?
+	float TrackMaxDrivingForce = 80000000.f;	// TODO: Find sensible starting value?
 
 private:
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	void ApplySidewaysForce();
+	void DriveTrack();
+
+	// To set the throttle but limit it to never being greater than +/- 1
+	float CurrentThrottle = 1;
 };
