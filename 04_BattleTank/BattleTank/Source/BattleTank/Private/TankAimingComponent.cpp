@@ -54,11 +54,6 @@ EFiringState UTankAimingComponent::GetFiringState()
 	return FiringState;
 }
 
-int UTankAimingComponent::GetRoundsLeft()
-{
-	return RoundsLeft;
-}
-
 // Check if Barrel is moving to set color for crosshair
 bool UTankAimingComponent::IsBarrelMoving()
 {
@@ -203,4 +198,9 @@ void UTankAimingComponent::Fire()
 		// Set the last fire time to current time
 		LastFireTime = FPlatformTime::Seconds();
 	}
+}
+
+int32 UTankAimingComponent::GetRoundsLeft()
+{
+	return RoundsLeft;
 }

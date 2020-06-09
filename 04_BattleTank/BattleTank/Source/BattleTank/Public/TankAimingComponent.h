@@ -52,8 +52,8 @@ public:
 	// Used for the AI Tanks so they only fire when locked
 	EFiringState GetFiringState();
 
-	int GetRoundsLeft();
-
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	int32 GetRoundsLeft();
 protected:
 	// Called when the game starts.
 	virtual void BeginPlay() override;
@@ -61,8 +61,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	EFiringState FiringState = EFiringState::Reloading;
 
-	UPROPERTY(BlueprintReadOnly)
-	int RoundsLeft = 3;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	int32 RoundsLeft = 3;
 	
 
 private:

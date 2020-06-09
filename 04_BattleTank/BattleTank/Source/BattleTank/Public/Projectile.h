@@ -29,4 +29,10 @@ public:
 private:
 	UProjectileMovementComponent* ProjectileMovementComponent = nullptr;
 
+	// VisibleAnywhere, so that the Details tab on the right side can be seen and also edited
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	UStaticMeshComponent* CollisionMesh = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	UParticleSystemComponent* LaunchBlast = nullptr;
 };
