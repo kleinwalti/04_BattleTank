@@ -9,7 +9,7 @@ void ATankAIController::BeginPlay()
 {
     Super::BeginPlay();
 
-    // Get and set the AimingComponent. TODO: Maybe set to tiick function in case of spawning new tanks during play?
+    // Get and set the AimingComponent. TODO: Maybe set to tick function in case of spawning new tanks during play?
     AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 }
 

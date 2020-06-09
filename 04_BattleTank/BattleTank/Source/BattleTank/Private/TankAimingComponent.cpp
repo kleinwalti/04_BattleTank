@@ -159,6 +159,7 @@ void UTankAimingComponent::MoveBarrelTowards()	//( FVector AimDirection )
 
 }
 
+// This function is called in the Tank_BP
 void UTankAimingComponent::InitializeAimingReference(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
 {
 	// Protection from null-pointer
