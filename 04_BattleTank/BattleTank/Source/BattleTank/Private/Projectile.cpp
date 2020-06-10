@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 #include "Projectile.h"
@@ -63,9 +64,19 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 	// TFire the Impulse, and then Activate the component so the impulse can affect the world
 	ExplosionForce->FireImpulse();
 
+	// Change the Root Component not to be the Collision Mesh and then delete the Collision Mesh
 	SetRootComponent(ImpactBlast);
 	CollisionMesh->DestroyComponent();
 
+	// Cause some damage, Radial, which will call TakeDamage() on Actors
+	if (
+		UGameplayStatics::ApplyRadialDamage(this, ExplosionDamage, GetActorLocation(), ExplosionForce->Radius, UDamageType::StaticClass(), TArray<AActor*>() )
+	)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Damage will be applied"));
+	}
+
+	// After a Time Deloy, destroy (delete) the projectile from the game
 	FTimerHandle MyTimerHandle;	// just used as a container
 	GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, this, &AProjectile::OnTimerExpire, DestroyDelay);
 }

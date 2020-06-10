@@ -22,5 +22,23 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-// TODO: Move this function to Tank Aiming Component and pass Projectile towards TAC
-// Then only call this function here to be called in the TAC or let it be handled by the TAC all together (not using the tank)
+float ATank::TakeDamage( float DamageAmount, struct FDamageEvent const & DamageEvent, class AController * EventInstigator, AActor * DamageCauser )
+{
+	UE_LOG(LogTemp, Warning, TEXT("%s is taking damage! Damage Amount: %f"), *GetName(), DamageAmount);
+
+	// Reduce health
+
+	// Convert to integer, so we can go to exactly 0
+	int32 DamagePoints = FPlatformMath::RoundToInt(DamageAmount);
+
+	int32 DamageToApply = FMath::Clamp<int32>(DamagePoints, 0, CurrentHealth);
+
+	CurrentHealth -= DamageToApply;
+
+	if (CurrentHealth <= 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Actor shuld die"));
+	}
+	
+	return DamageToApply;
+}

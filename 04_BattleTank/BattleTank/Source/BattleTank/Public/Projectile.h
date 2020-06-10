@@ -33,6 +33,8 @@ private:
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
+	void OnTimerExpire();
+
 	UProjectileMovementComponent* ProjectileMovementComponent = nullptr;
 
 	// VisibleAnywhere, so that the Details tab on the right side can be seen and also edited
@@ -48,8 +50,10 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	URadialForceComponent* ExplosionForce = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Time")
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float DestroyDelay = 5; 	// TODO: Set sensible default
 
-	void OnTimerExpire();
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float ExplosionDamage = 20;	// TODO: Set sensible default
+
 };
