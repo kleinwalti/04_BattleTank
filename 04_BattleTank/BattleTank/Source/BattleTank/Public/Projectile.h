@@ -47,4 +47,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	URadialForceComponent* ExplosionForce = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Time")
+	float DestroyDelay = 5; 	// TODO: Set sensible default
+
+	void OnTimerExpire();
 };

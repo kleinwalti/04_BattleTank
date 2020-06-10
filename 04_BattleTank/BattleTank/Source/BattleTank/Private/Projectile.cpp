@@ -62,10 +62,21 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 
 	// TFire the Impulse, and then Activate the component so the impulse can affect the world
 	ExplosionForce->FireImpulse();
+
+	SetRootComponent(ImpactBlast);
+	CollisionMesh->DestroyComponent();
+
+	FTimerHandle MyTimerHandle;	// just used as a container
+	GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, this, &AProjectile::OnTimerExpire, DestroyDelay);
 }
 
 void AProjectile::LaunchProjectile(float LaunchSpeed)
 {
 	ProjectileMovementComponent->SetVelocityInLocalSpace(FVector::ForwardVector * LaunchSpeed);
 	ProjectileMovementComponent->Activate();
+}
+
+void AProjectile::OnTimerExpire()
+{
+	Destroy();
 }
