@@ -25,7 +25,6 @@ void UTankTrack::TickComponent(float DeltaTime, enum ELevelTick TickType, FActor
 }
 
 // TODO: Solve Problem here: After some time I cannot move my tank, because the OnHit function is not called (uncomment log for testing)
-// UPrimitiveComponent* OnComponentHit,
 void UTankTrack::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
     // UE_LOG(LogTemp, Warning, TEXT("%s: Track is hitting"), *GetOwner()->GetName());

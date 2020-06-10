@@ -27,6 +27,9 @@ public:
 	void LaunchProjectile(float LaunchSpeed);
 
 private:
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
 	UProjectileMovementComponent* ProjectileMovementComponent = nullptr;
 
 	// VisibleAnywhere, so that the Details tab on the right side can be seen and also edited
@@ -35,4 +38,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	UParticleSystemComponent* LaunchBlast = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	UParticleSystemComponent* ImpactBlast = nullptr;
 };

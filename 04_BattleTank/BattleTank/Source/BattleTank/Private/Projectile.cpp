@@ -27,19 +27,32 @@ AProjectile::AProjectile()
 	// Forces the LaunchBlast to be attached to the Collision Mesh
 	LaunchBlast->AttachTo(CollisionMesh);
 
-
+	// Adds a Particle System 'Impact Blast' as a component to the Projectile Class
+	ImpactBlast = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Impact Blast"));
+	// Forces the LaunchBlast to be attached to the Collision Mesh
+	ImpactBlast->AttachTo(CollisionMesh);
+	// Do not auto-activate the Impact Blast when the Projectile spawns
+	ImpactBlast->bAutoActivate = false;
 }
 
 // Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+	// Register delegate at begin play like this:
+    CollisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 }
 
 // Called every frame
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	// Activate the Impact Blast
+	ImpactBlast->Activate();
 }
 
 void AProjectile::LaunchProjectile(float LaunchSpeed)

@@ -33,6 +33,7 @@ public:
 	float TrackMaxDrivingForce = 80000000.f;	// TODO: Find sensible starting value?
 
 private:
+	// I think it needs to be a UFUNCTION, thats just how this works, although we do not use it in Blueprint
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
