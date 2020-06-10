@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Particles/ParticleSystemComponent.h"
+#include "PhysicsEngine/RadialForceComponent.h"
 #include "Projectile.h"
 
 // Sets default values
@@ -33,6 +34,11 @@ AProjectile::AProjectile()
 	ImpactBlast->AttachTo(CollisionMesh);
 	// Do not auto-activate the Impact Blast when the Projectile spawns
 	ImpactBlast->bAutoActivate = false;
+
+	// Adds a Radial Force Component 'Explosion Force'
+	ExplosionForce = CreateDefaultSubobject<URadialForceComponent>(TEXT("Explosion Force"));
+	// Forces it to be attached to the Collision Mesh which also brings a transform and lets the force not start at the center of the world
+	ExplosionForce->AttachTo(CollisionMesh);
 }
 
 // Called when the game starts or when spawned
@@ -53,6 +59,9 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 {
 	// Activate the Impact Blast
 	ImpactBlast->Activate();
+
+	// TFire the Impulse, and then Activate the component so the impulse can affect the world
+	ExplosionForce->FireImpulse();
 }
 
 void AProjectile::LaunchProjectile(float LaunchSpeed)

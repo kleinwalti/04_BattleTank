@@ -63,7 +63,7 @@ protected:
 
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	int32 RoundsLeft = 3;
+	int32 RoundsLeft = 20;
 	
 
 private:
@@ -84,7 +84,7 @@ private:
 
 	// Time needed to Reload a Projectile
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	float ReloadTimeInSeconds = 3.f;
+	float ReloadTimeInSeconds = 2.f;
 
 	// Initialize LastFireTime to 0
 	double LastFireTime = 0;

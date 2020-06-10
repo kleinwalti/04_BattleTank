@@ -7,6 +7,9 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Projectile.generated.h"
 
+// Forward Declarations
+class URadialForceComponent;
+
 UCLASS()
 class BATTLETANK_API AProjectile : public AActor
 {
@@ -41,4 +44,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	UParticleSystemComponent* ImpactBlast = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	URadialForceComponent* ExplosionForce = nullptr;
 };
