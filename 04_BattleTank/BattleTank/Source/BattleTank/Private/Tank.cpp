@@ -38,6 +38,8 @@ float ATank::TakeDamage( float DamageAmount, struct FDamageEvent const & DamageE
 	if (CurrentHealth <= 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Actor shuld die"));
+		// Use the delegate to broadcast (to the AIController and the Player Controller)
+		OnTankDeathDelegate.Broadcast();
 	}
 	
 	return DamageToApply;

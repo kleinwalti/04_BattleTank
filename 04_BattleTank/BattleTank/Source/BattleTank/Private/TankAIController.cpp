@@ -2,6 +2,7 @@
 
 #include "Engine/World.h"
 #include "GameFramework/Controller.h"
+#include "Tank.h"   // needed for the delegate
 #include "TankAimingComponent.h"
 #include "TankAIController.h"
 
@@ -11,6 +12,27 @@ void ATankAIController::BeginPlay()
 
     // Get and set the AimingComponent. TODO: Maybe set to tick function in case of spawning new tanks during play?
     AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+}
+
+void ATankAIController::SetPawn(APawn* InPawn)
+{
+    // Call the super class so everything in this function from the parent class will still be executed, and we are just adding functionality instead of completely overriding
+    Super::SetPawn(InPawn);
+
+    ATank* PosessedTank = nullptr;
+    // Only do when there is a pawn
+    if (InPawn)
+    {
+        // We cast that pawn to a tank
+        PosessedTank = Cast<ATank>(InPawn);
+        
+        // Protection before using Posessed Tank
+        if (!ensure(PosessedTank)) { return; }
+
+        // Posessed Tank is the one having the delegate function which we want to add this one
+        PosessedTank->OnTankDeathDelegate.AddUniqueDynamic(this, &ATankAIController::OnTankDeath);    
+    }
+
 }
 
 void ATankAIController::Tick( float DeltaSeconds )
@@ -34,4 +56,9 @@ void ATankAIController::Tick( float DeltaSeconds )
     {
         AimingComponent->Fire();
     }
+}
+
+void ATankAIController::OnTankDeath()
+{
+    UE_LOG(LogTemp, Warning, TEXT("OnTankDeath() is being executed - AI Tank should die"));
 }

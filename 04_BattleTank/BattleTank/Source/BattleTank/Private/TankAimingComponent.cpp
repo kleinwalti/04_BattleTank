@@ -169,7 +169,7 @@ void UTankAimingComponent::Fire()
 {
 	// Protection of Barrel and ProjectileBlueprint
 	if(!ensure(Barrel || ProjectileBlueprint)) { return; }
-	UE_LOG(LogTemp, Warning, TEXT("Fire() is being called"));
+	// UE_LOG(LogTemp, Warning, TEXT("Fire() is being called"));
 
 	// Set bIsReloaded true after ReloadTime
 	// bool bIsReloaded = ( FPlatformTime::Seconds() - LastFireTime ) > ReloadTimeInSeconds;

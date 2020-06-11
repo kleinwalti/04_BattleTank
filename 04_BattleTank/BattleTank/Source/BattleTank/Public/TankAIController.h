@@ -16,9 +16,14 @@ class BATTLETANK_API ATankAIController : public AAIController
 	GENERATED_BODY()
 
 public:
-
 	virtual void BeginPlay() override;
 	virtual void Tick( float DeltaSeconds ) override;
+
+	// Overriding the function where the Controller Sets the pawn to posess or something; needed for delegates
+	virtual void SetPawn(APawn* InPawn) override;
+
+	UFUNCTION()
+	void OnTankDeath();
 
 protected:
 	// Means how close the AI tanks wants to be to the player, in cm. Somehow doesn't work when editing in BP. Edit Value in cpp or while playing game.

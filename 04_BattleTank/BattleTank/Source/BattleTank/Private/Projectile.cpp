@@ -73,7 +73,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 		UGameplayStatics::ApplyRadialDamage(this, ExplosionDamage, GetActorLocation(), ExplosionForce->Radius, UDamageType::StaticClass(), TArray<AActor*>() )
 	)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Damage will be applied"));
+		// UE_LOG(LogTemp, Warning, TEXT("Damage will be applied"));
 	}
 
 	// After a Time Deloy, destroy (delete) the projectile from the game

@@ -14,6 +14,11 @@ class BATTLETANK_API ATank : public APawn
 public:
 	// Sets default values for this pawn's properties
 	ATank();
+
+	// Create Delegate Type
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeathDelegate);
+	// Declare the Delegate with Type
+	FDeathDelegate OnTankDeathDelegate;
 	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

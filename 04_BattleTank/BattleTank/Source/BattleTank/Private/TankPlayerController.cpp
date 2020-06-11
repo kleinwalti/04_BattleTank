@@ -3,6 +3,7 @@
 #include "Engine/World.h"
 #include "GameFramework/Pawn.h"
 #include "DrawDebugHelpers.h"
+#include "Tank.h"   // for delegate
 #include "TankAimingComponent.h"
 #include "TankPlayerController.h"
 
@@ -14,6 +15,33 @@ void ATankPlayerController::BeginPlay()
     UTankAimingComponent* AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
     if (!ensure(AimingComponent)) { return; }
     FoundTankAimingComponent(AimingComponent);
+}
+
+void ATankPlayerController::SetPawn(APawn* InPawn)
+{
+    // Don't change this function, only add functionallity
+    Super::SetPawn(InPawn);
+
+    ATank* PlayerTank = nullptr;
+
+    // Make sure there is a pawn
+    if (InPawn)
+    {
+        // Cast that Pawn to a Tank
+        PlayerTank = Cast<ATank>(InPawn);
+
+        // Make sure we have that tank
+        if (!ensure(PlayerTank)) { return; }
+
+        // Add a TankPlayerControllers memmber function to the broadcasting list of the tank class
+        PlayerTank->OnTankDeathDelegate.AddUniqueDynamic(this, &ATankPlayerController::OnPlayerDeath);
+    }
+
+}
+
+void ATankPlayerController::OnPlayerDeath()
+{
+    UE_LOG(LogTemp, Warning, TEXT("The Player tank should have died now."));
 }
 
 void ATankPlayerController::Tick(float DeltaSeconds)
