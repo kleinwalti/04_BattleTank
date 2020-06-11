@@ -30,6 +30,10 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Setup")
 	int32 CurrentHealth = StartingHealth;
 
+	// Gives the Current Health in percent of the Starting Health. Use BlueprintPure, so nothing can change the health in BP. It's like const.
+	UFUNCTION(BlueprintPure, Category = "Setup")
+	float GetCurrentHealth() const;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
