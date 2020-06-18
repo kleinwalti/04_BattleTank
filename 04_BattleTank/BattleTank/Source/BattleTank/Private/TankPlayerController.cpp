@@ -109,8 +109,9 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector &HitLocation, FVect
     FHitResult HitResult;
     float Range = 1000000.f;    // Reichweite des LineTracings
 
-    // LineTrace für alles, was sichtbar ist
-    if( GetWorld()->LineTraceSingleByChannel(HitResult, CameraWorldLocation, LookVector * Range, ECollisionChannel::ECC_Visibility) )
+    // LineTrace für alles, was sichtbar ist (ECC_Visibility)
+    // aber um das UI nicht treffen zu können nehmen wir ECC_Camera
+    if( GetWorld()->LineTraceSingleByChannel(HitResult, CameraWorldLocation, LookVector * Range, ECollisionChannel::ECC_Camera) )
     {
         HitLocation = HitResult.Location;
         return true;
