@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Michael Waltersdorf.
 
 #include "Engine/World.h"
 #include "GameFramework/Pawn.h"
@@ -17,11 +17,13 @@ void ATankPlayerController::BeginPlay()
     FoundTankAimingComponent(AimingComponent);
 }
 
+// Extending the Functionallity of the SetPawn() function of APlayerController, so to subscribe to a broadcasting list
 void ATankPlayerController::SetPawn(APawn* InPawn)
 {
-    // Don't change this function, only add functionallity
+    // Super::SetPawn() means: Don't change the SetPawn() original function, only add functionallity
     Super::SetPawn(InPawn);
 
+    // Initialize Player Tank
     ATank* PlayerTank = nullptr;
 
     // Make sure there is a pawn
@@ -33,15 +35,17 @@ void ATankPlayerController::SetPawn(APawn* InPawn)
         // Make sure we have that tank
         if (!ensure(PlayerTank)) { return; }
 
-        // Add a TankPlayerControllers memmber function to the broadcasting list of the tank class
+        // Add ATankPlayerControllers member function OnPlayerDeath() to the broadcasting list of the tank class ( see also Tank.cpp )
         PlayerTank->OnTankDeathDelegate.AddUniqueDynamic(this, &ATankPlayerController::OnPlayerDeath);
     }
-
 }
 
+// Handles what will happen when the Player died
 void ATankPlayerController::OnPlayerDeath()
 {
-    UE_LOG(LogTemp, Warning, TEXT("The Player tank should have died now."));
+    // Start spectating mode, as the only mode allowed.
+    StartSpectatingOnly();
+    // UE_LOG(LogTemp, Warning, TEXT("The Player tank should have died now."));
 }
 
 void ATankPlayerController::Tick(float DeltaSeconds)
@@ -55,11 +59,15 @@ void ATankPlayerController::Tick(float DeltaSeconds)
 // Call the other two functions and then delegate aiming TankAimingComponent by passing the HitLocation
 void ATankPlayerController::AimTowardsCrosshair() const
 {
+    APawn* PlayerPawn = GetPawn();
+    // Make sure we are posessing a pawn
+    if (!PlayerPawn) { return; }    // TODO: remove the ensure, just make if(!PlayerPawn)   Yes, this one is triggered! Yes.
+
     // Define variable Hit Location
     FVector HitLocation;
 
     // Find again the AimingComponent (in case we died, we will posess a different pawn now)
-    UTankAimingComponent* AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+    UTankAimingComponent* AimingComponent = PlayerPawn->FindComponentByClass<UTankAimingComponent>();
 
     // Protect the UTankAimingComponent pointer
     if (!ensure(AimingComponent)) { return; }

@@ -1,7 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Michael Waltersdorf.
 
 #include "Engine/World.h"
 #include "GameFramework/Controller.h"
+#include "GameFramework/Pawn.h"
 #include "Tank.h"   // needed for the delegate
 #include "TankAimingComponent.h"
 #include "TankAIController.h"
@@ -14,6 +15,7 @@ void ATankAIController::BeginPlay()
     AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 }
 
+// Extending the Functionallity of the SetPawn() function of AController, so to subscribe to a broadcasting list
 void ATankAIController::SetPawn(APawn* InPawn)
 {
     // Call the super class so everything in this function from the parent class will still be executed, and we are just adding functionality instead of completely overriding
@@ -32,7 +34,6 @@ void ATankAIController::SetPawn(APawn* InPawn)
         // Posessed Tank is the one having the delegate function which we want to add this one
         PosessedTank->OnTankDeathDelegate.AddUniqueDynamic(this, &ATankAIController::OnTankDeath);    
     }
-
 }
 
 void ATankAIController::Tick( float DeltaSeconds )
@@ -42,8 +43,10 @@ void ATankAIController::Tick( float DeltaSeconds )
     // Get the Pawn the Player is posessing
     APawn* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
 
+    // TODO: Remove. It is just for double making sure
+
     // Check if Player-Pawn and AimingComponent are found, if not return
-    if (! ensure(PlayerPawn || AimingComponent) ) { return; }
+    if (!PlayerPawn || !AimingComponent) { return; }
 
     // Move towards Player Pawn location, used by TankMovementComponent
     MoveToActor(PlayerPawn, AcceptanceRadius);
@@ -60,5 +63,6 @@ void ATankAIController::Tick( float DeltaSeconds )
 
 void ATankAIController::OnTankDeath()
 {
-    UE_LOG(LogTemp, Warning, TEXT("OnTankDeath() is being executed - AI Tank should die"));
+    GetPawn()->DetachFromControllerPendingDestroy();
+    // UE_LOG(LogTemp, Warning, TEXT("OnTankDeath() is being executed - AI Tank should die"));
 }

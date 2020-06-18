@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Michael Waltersdorf.
 
 #pragma once
 
@@ -10,6 +10,7 @@
 // Forward declarations
 class UTankAimingComponent;
 
+// Handles AI Aiming, Moving, Firing and Death
 UCLASS()
 class BATTLETANK_API ATankAIController : public AAIController
 {

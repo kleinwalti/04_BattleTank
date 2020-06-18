@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Michael Waltersdorf.
 
 #pragma once
 
@@ -6,6 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
 
+// This class handles the health and the death event of the tanks
 UCLASS()
 class BATTLETANK_API ATank : public APawn
 {
@@ -32,8 +33,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	int32 StartingHealth = 100;
 
-	UPROPERTY(VisibleAnywhere, Category = "Setup")
-	int32 CurrentHealth = StartingHealth;
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	int32 CurrentHealth = 100;
 
 	// Gives the Current Health in percent of the Starting Health. Use BlueprintPure, so nothing can change the health in BP. It's like const.
 	UFUNCTION(BlueprintPure, Category = "Setup")

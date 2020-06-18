@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Michael Waltersdorf.
 
 #pragma once
 
@@ -9,7 +9,8 @@
 // Forward Declarations
 class UTankAimingComponent;
 
-// Responsible for calculating the aiming of the player and passing it on to the TankAimingComponent
+// Responsible for calculating the aiming of the player and passing it on to the TankAimingComponent,
+// and responsible for handling the death of the player
 UCLASS()
 class BATTLETANK_API ATankPlayerController : public APlayerController
 {
