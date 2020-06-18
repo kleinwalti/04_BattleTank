@@ -6,7 +6,7 @@
 // Constructor (manually added)
 UTankTrack::UTankTrack()
 {
-    PrimaryComponentTick.bCanEverTick = false;
+    PrimaryComponentTick.bCanEverTick = true;
 }
 
 // BeginPlay (manually added)
@@ -22,12 +22,17 @@ void UTankTrack::BeginPlay()
 void UTankTrack::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+    // Every frame Check if tank is going up and then apply downwardforce to avoid this jumping bug
+    CheckIfGoingUpAndApplyDownwardForce();
 }
 
 // TODO: Solve Problem here: After some time I cannot move my tank, because the OnHit function is not called (uncomment log for testing)
 void UTankTrack::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
     // UE_LOG(LogTemp, Warning, TEXT("%s: Track is hitting"), *GetOwner()->GetName());
+
+    // ApplyDownwardForce(1.f);
 
     // Only when on ground ..
     // .. set the Movement force
@@ -96,4 +101,38 @@ void UTankTrack::ApplySidewaysForce()
     TankRoot->AddForce(SidewayForce);
 
     // CurrentThrottle = 0;
+}
+
+// Method used to counteract the spontaneous jumping of the tank due to ground being uneven and tank being dragged
+void UTankTrack::CheckIfGoingUpAndApplyDownwardForce()
+{
+    // Get the upwards Speed of the tank
+    float UpwardSpeed = FVector::DotProduct( GetUpVector(), GetComponentVelocity() );
+
+    // Calculate the opposite needed acceleration per frame
+    float DeltaTime = GetWorld()->GetDeltaSeconds();
+    float NeededAccelerationPerFrame = - UpwardSpeed/DeltaTime;
+
+    // Calculate the Force to be applied as a vector, but with a factor to make it not that big
+    auto TankRoot = Cast<UPrimitiveComponent> ( GetOwner()->GetRootComponent() );
+    FVector DownwardForce = 1.f * (TankRoot->GetMass() * NeededAccelerationPerFrame) * GetUpVector();
+
+    // Calculate the Downward force (hopefully -Z in World Space)
+    // FVector DownwardForce = EnterMinusForUpwardForce * -8000000.f * GetUpVector();   // TODO: Maybe find or calculate the magnitude
+
+    // Add the Downward Force to the tank only if it is downwards
+    if (DownwardForce.Z <= -0.f)
+    {
+        TankRoot->AddForce(DownwardForce);
+        UE_LOG(LogTemp, Warning, TEXT("Downward Force of: %s"), *DownwardForce.ToString());
+    }
+    /*
+    else
+    {
+        TankRoot->AddForce(-0.01 * DownwardForce);
+        UE_LOG(LogTemp, Warning, TEXT("Downward Force of: %s"), *DownwardForce.ToString());
+    }
+    
+    UE_LOG(LogTemp, Warning, TEXT("Doing nothing"));
+    */
 }

@@ -28,9 +28,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void SetThrottle(float Throttle);
 
-	// The Maximum Throttle in Newton
+	// The Maximum Throttle in Newton (or some other wierd value) (for a Tank mass of 100 kg works 2 000 000 ok)
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
-	float TrackMaxDrivingForce = 80000000.f;	// TODO: Find sensible starting value?
+	float TrackMaxDrivingForce = 2000000.f;	// TODO: Find sensible starting value?
 
 private:
 	// I think it needs to be a UFUNCTION, thats just how this works, although we do not use it in Blueprint
@@ -39,6 +39,9 @@ private:
 
 	void ApplySidewaysForce();
 	void DriveTrack();
+
+	// Badly fix the jumping issue, instead of continuing the tutorial
+	void CheckIfGoingUpAndApplyDownwardForce();
 
 	// To set the throttle but limit it to never being greater than +/- 1
 	float CurrentThrottle = 1;
