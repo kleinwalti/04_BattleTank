@@ -1,11 +1,11 @@
 // Copyright Michael Waltersdorf.
 
+#include "TankAIController.h"
 #include "Engine/World.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/Pawn.h"
 #include "Tank.h"   // needed for the delegate
 #include "TankAimingComponent.h"
-#include "TankAIController.h"
 
 void ATankAIController::BeginPlay()
 {

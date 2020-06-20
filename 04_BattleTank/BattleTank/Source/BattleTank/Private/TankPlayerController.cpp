@@ -1,11 +1,11 @@
 // Copyright Michael Waltersdorf.
 
+#include "TankPlayerController.h"
 #include "Engine/World.h"
 #include "GameFramework/Pawn.h"
 #include "DrawDebugHelpers.h"
 #include "Tank.h"   // for delegate
 #include "TankAimingComponent.h"
-#include "TankPlayerController.h"
 
 void ATankPlayerController::BeginPlay()
 {

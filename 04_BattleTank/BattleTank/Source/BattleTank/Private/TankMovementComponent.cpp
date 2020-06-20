@@ -1,10 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyight Michael Waltersdorf.
 
-#include "TankTrack.h"
 #include "TankMovementComponent.h"
+#include "Components/AudioComponent.h"
+#include "TankTrack.h"
 
 // Get Reference to left and right track. This function is called from blueprint.
-void UTankMovementComponent::InitializeTracks(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet)
+void UTankMovementComponent::InitializeMovementComponent(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet, UAudioComponent* FastDrivingSoundToSet, UAudioComponent* IdleDrivingSoundToSet)
 {
     // Pointer Protection
     if ( !ensure(LeftTrackToSet) || !ensure(RightTrackToSet)) {UE_LOG(LogTemp, Error, TEXT("No Left or No Right Track to Set! nullptr prot.")); return; }   // actually not really needed, but hey, some info if something is not right
@@ -12,6 +13,14 @@ void UTankMovementComponent::InitializeTracks(UTankTrack* LeftTrackToSet, UTankT
     // Setting the Variables to be the tracks passed in via blueprint
     LeftTrack = LeftTrackToSet;
     RightTrack = RightTrackToSet;
+    // FastDrivingSoundToSet = FastDrivingSound;    // DELETE!
+
+    if ( !ensure(FastDrivingSoundToSet) ) { return; }
+    if ( !ensure(IdleDrivingSoundToSet) ) { return; }
+    // Passing the Driving Sounds immediatelly to the track (we need to give it to both tracks, otherwise nullptr in one track.cpp)
+    LeftTrack->GetTrackSoundEffects(FastDrivingSoundToSet, IdleDrivingSoundToSet);
+    RightTrack->GetTrackSoundEffects(FastDrivingSoundToSet, IdleDrivingSoundToSet);
+
 }
 
 // Movement of AI Tanks using the Pathfinding logic

@@ -40,9 +40,23 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Setup")
 	float GetCurrentHealth() const;
 
-	UPROPERTY(VisibleAnywhere, Category = "Component")
+	UPROPERTY(VisibleAnywhere, Category = "SoundEffect")
 	UAudioComponent* FiringSound = nullptr;
 
+	UPROPERTY(VisibleAnywhere, Category = "SoundEffect")
+	UAudioComponent* FastDrivingSound = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "SoundEffect")
+	UAudioComponent* IdleDrivingSound = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "SoundEffect")
+	UAudioComponent* ReloadingSound = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "SoundEffect")
+	UAudioComponent* BarrelMovementSound = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "SoundEffect")
+	UAudioComponent* BarrelLockedSound = nullptr;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -54,8 +68,12 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	UParticleSystemComponent* DeathExplosion = nullptr;
 
-	UPROPERTY(VisibleAnywhere, Category = "Component")
+	UPROPERTY(VisibleAnywhere, Category = "SoundEffect")
 	UAudioComponent* ImpactSound = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "SoundEffect")
+	UAudioComponent* DeathSound = nullptr;
+
 
 	void OnTankDeath();
 };

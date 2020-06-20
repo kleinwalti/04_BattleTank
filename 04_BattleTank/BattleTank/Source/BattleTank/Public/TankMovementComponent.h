@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyight Michael Waltersdorf.
 
 #pragma once
 
@@ -19,7 +19,7 @@ class BATTLETANK_API UTankMovementComponent : public UNavMovementComponent
 public:
 	// Get Reference to left and right track
 	UFUNCTION ( BlueprintCallable, Category = "Setup")
-	void InitializeTracks(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet);
+	void InitializeMovementComponent(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet, UAudioComponent* FastDrivingSoundToSet, UAudioComponent* IdleDrivingSoundToSet);
 
 	// Forward Movement Function
 	UFUNCTION ( BlueprintCallable, Category = "Input")

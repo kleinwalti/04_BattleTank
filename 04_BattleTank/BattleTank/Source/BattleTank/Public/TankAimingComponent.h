@@ -40,7 +40,7 @@ public:
 
 	// Sets the Reference for the Barrel and the Turret
 	UFUNCTION(BlueprintCallable, Category = "Setup")
-	void InitializeAimingReference(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet, UAudioComponent* FiringSound);
+	void InitializeAimingReference(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet, UAudioComponent* FiringSoundToSet, UAudioComponent* ReloadingSoundToSet, UAudioComponent* BarrelMovementSoundToSet, UAudioComponent* BarrelLockedSoundToSet);
 
 	// Makes it possible to set the Projectile_BP in Blueprint for this variable 'ProjectileBlueprint' to be used in C++
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
@@ -75,6 +75,10 @@ private:
 
 	// Define what the Audio Component with the Firing Sound on it is (to be passed in by Blueprint)
 	UAudioComponent* FiringSound = nullptr;
+	UAudioComponent* ReloadingSound = nullptr;
+	UAudioComponent* BarrelMovementSound = nullptr;
+	UAudioComponent* BarrelLockedSound = nullptr;
+	
 	void MoveBarrelTowards();	// ( FVector AimDirection )
 
 	bool IsBarrelMoving();

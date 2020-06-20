@@ -1,7 +1,7 @@
 // Copyright Michael Waltersdorf.
 
-#include "Components/AudioComponent.h"
 #include "TankAimingComponent.h"
+#include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Math/Vector.h"
 #include "TankBarrel.h"
@@ -37,16 +37,34 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	// If still ammo left, check if Reloading, aiming or locked and set the firing state accordingly
 	else if ( ( FPlatformTime::Seconds() - LastFireTime ) < ReloadTimeInSeconds )
 	{
+		// Set the Firing State
 		FiringState = EFiringState::Reloading;
+
+		// Play the Reloading Sound (one full loop)
+		if (!ensure (ReloadingSound)) { return; }
+		ReloadingSound->Play();
+		
 	}
 	else if ( IsBarrelMoving() )
 	{
+		
 		FiringState = EFiringState::Aiming;
+
+		// Handle Sound Effects
+		if (!ensure (BarrelMovementSound)) { return; }
+		BarrelMovementSound->Activate();
 	}
-	else
+	else if ( FiringState != EFiringState::Locked )
 	{
+		// Set the Firing State
 		FiringState = EFiringState::Locked;
+
+		// Handle Sound Effects
+		if (!ensure (BarrelMovementSound)) { return; }
+		BarrelMovementSound->Stop();
+		BarrelLockedSound->Play();
 	}
+	// else here now would mean that the FiringState is aready Locked
 }
 
 EFiringState UTankAimingComponent::GetFiringState()
@@ -154,15 +172,18 @@ void UTankAimingComponent::MoveBarrelTowards()	//( FVector AimDirection )
 }
 
 // This function is called in the Tank_BP
-void UTankAimingComponent::InitializeAimingReference(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet, UAudioComponent* FiringSoundToSet)
+void UTankAimingComponent::InitializeAimingReference(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet, UAudioComponent* FiringSoundToSet, UAudioComponent* ReloadingSoundToSet, UAudioComponent* BarrelMovementSoundToSet, UAudioComponent* BarrelLockedSoundToSet)
 {
 	// Protection from null-pointer
 	if (!BarrelToSet || !TurretToSet) {UE_LOG(LogTemp, Error, TEXT("TankAimingComponent.cpp-InitializeAimingReference(): I did not receive any Barrel or Turret ToSet! Careful, null-pointer!")); return; }
-
-	// Set the Barrel, the Turret Reference and the Firing Sound
+	if (!FiringSoundToSet || !ReloadingSoundToSet || !BarrelMovementSoundToSet) {UE_LOG(LogTemp, Error, TEXT("No Sounds received by AimingComponent")); return; }
+	// Set the Barrel, the Turret Reference and the Sounds
 	Barrel = BarrelToSet;
 	Turret = TurretToSet;
 	FiringSound = FiringSoundToSet;
+	ReloadingSound = ReloadingSoundToSet;
+	BarrelMovementSound = BarrelMovementSoundToSet;
+	BarrelLockedSound = BarrelLockedSoundToSet;
 }
 
 void UTankAimingComponent::Fire()
@@ -195,7 +216,7 @@ void UTankAimingComponent::Fire()
 		Projectile->LaunchProjectile(LaunchSpeed);
 
 		// Play Firing Sound
-		FiringSound->Activate();
+		FiringSound->Play();
 
 		// Reduce the remaining ammonition
 		RoundsLeft--;		

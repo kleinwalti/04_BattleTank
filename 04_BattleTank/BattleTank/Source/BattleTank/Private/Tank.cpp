@@ -1,8 +1,8 @@
 // Copyright Michael Waltersdorf.
 
+#include "Tank.h"
 #include "Components/AudioComponent.h"
 #include "Particles/ParticleSystemComponent.h"
-#include "Tank.h"
 
 // Sets default values
 ATank::ATank()
@@ -32,11 +32,49 @@ ATank::ATank()
 	FiringSound->AttachTo( TankMesh );
 	FiringSound->bAutoActivate = false;
 
-	// Adds an Audio Component
+	// Adds an Audio Component Impact Sound
 	ImpactSound = CreateDefaultSubobject<UAudioComponent>(TEXT("Impact Sound"));
 	// Attach it to root component (TankMesh) and set AutoActivate to false as default
 	ImpactSound->AttachTo( TankMesh );
 	ImpactSound->bAutoActivate = false;
+
+	// Adds an Audio Component DeathSound
+	DeathSound = CreateDefaultSubobject<UAudioComponent>(TEXT("DeathSound"));
+	// Attach it to root component (TankMesh) and set AutoActivate to false as default
+	DeathSound->AttachTo( TankMesh );
+	DeathSound->bAutoActivate = false;
+
+	// Adds an Audio Component FastDrivingSound
+	FastDrivingSound = CreateDefaultSubobject<UAudioComponent>(TEXT("FastDrivingSound"));
+	// Attach it to root component (TankMesh)
+	FastDrivingSound->AttachTo( TankMesh );
+	// Auto Activate true for this one to make it pausable or something? Don't know
+	FastDrivingSound->bAutoActivate = true;
+
+	// Adds an Audio Component IdleDrivingSound
+	IdleDrivingSound = CreateDefaultSubobject<UAudioComponent>(TEXT("IdleDrivingSound"));
+	// Attach it to root component (TankMesh)
+	IdleDrivingSound->AttachTo( TankMesh );
+	// Auto Activate true for this one to make it pausable or something? Don't know
+	IdleDrivingSound->bAutoActivate = true;
+
+	// Adds an Audio Component IdleDrivingSound
+	ReloadingSound = CreateDefaultSubobject<UAudioComponent>(TEXT("ReloadingSound"));
+	// Attach it to root component (TankMesh) and set AutoActivate to false as default
+	ReloadingSound->AttachTo( TankMesh );
+	ReloadingSound->bAutoActivate = false;
+
+	// Adds an Audio Component BarrelMovementSound
+	BarrelMovementSound = CreateDefaultSubobject<UAudioComponent>(TEXT("BarrelMovementSound"));
+	// Attach it to root component (TankMesh) and set AutoActivate to false as default
+	BarrelMovementSound->AttachTo( TankMesh );
+	BarrelMovementSound->bAutoActivate = false;
+	
+	// Adds an Audio Component BarrelLockedSound
+	BarrelLockedSound = CreateDefaultSubobject<UAudioComponent>(TEXT("BarrelLockedSound"));
+	// Attach it to root component (TankMesh) and set AutoActivate to false as default
+	BarrelLockedSound->AttachTo( TankMesh );
+	BarrelLockedSound->bAutoActivate = false;
 }
 
 // Called when the game starts or when spawned
@@ -71,7 +109,7 @@ float ATank::TakeDamage( float DamageAmount, struct FDamageEvent const & DamageE
 	CurrentHealth -= DamageToApply;
 
 	// Play an Impact sound to indicate that the tank was hit
-	ImpactSound->Activate();
+	ImpactSound->Play();
 
 	if (CurrentHealth <= 0)
 	{
@@ -91,8 +129,10 @@ float ATank::GetCurrentHealth() const
 // Call this function when the Tank should become dead
 void ATank::OnTankDeath()
 {
-	// Activate the Death Explosion
+	// Activate the Death Explosion and Death Sound
 	DeathExplosion->Activate();
+	DeathSound->Activate();
+
 	// Use the delegate to broadcast Tanks Death (to the AIController and the Player Controller)
 	OnTankDeathDelegate.Broadcast();
 }

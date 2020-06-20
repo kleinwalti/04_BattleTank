@@ -1,9 +1,9 @@
 // Copyright Michael Waltersdorf.
 
+#include "Projectile.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
-#include "Projectile.h"
 
 // Sets default values
 AProjectile::AProjectile()

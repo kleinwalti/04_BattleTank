@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyight Michael Waltersdorf.
 
 #pragma once
 
@@ -28,6 +28,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void SetThrottle(float Throttle);
 
+	// Get all Sound Effects associated with the tracks(FastDrivingSound, )
+	void GetTrackSoundEffects(UAudioComponent* FastDrivingSoundToSet, UAudioComponent* IdleDrivingSoundToSet);
+
 	// The Maximum Throttle in Newton (or some other wierd value) (for a Tank mass of 100 kg works 2 000 000 ok)
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	float TrackMaxDrivingForce = 2000000.f;	// TODO: Find sensible starting value?
@@ -45,4 +48,9 @@ private:
 
 	// To set the throttle but limit it to never being greater than +/- 1
 	float CurrentThrottle = 1;
+
+	float SidewaySpeed = 0;
+
+	UAudioComponent* FastDrivingSound = nullptr;
+	UAudioComponent* IdleDrivingSound = nullptr;
 };

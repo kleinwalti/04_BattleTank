@@ -1,7 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+// Copyight Michael Waltersdorf.
 
 #include "TankTrack.h"
+#include "Components/AudioComponent.h"
 
 // Constructor (manually added)
 UTankTrack::UTankTrack()
@@ -57,7 +57,26 @@ void UTankTrack::SetThrottle(float Throttle)
     CurrentThrottle = FMath::Clamp<float>((CurrentThrottle + Throttle), -1, +1);
     // UE_LOG(LogTemp, Warning, TEXT("%s: %s CurrentThrottle is: %f"), *GetOwner()->GetName(), *GetName(), CurrentThrottle );
     // CurrentThrottle = Throttle;
+    
+    // Activate Fast Driving Sound when Throttle input
+    if (!ensure(FastDrivingSound)) { return; }
+    if (!ensure(IdleDrivingSound)) { return; }
+    if (CurrentThrottle != 0)
+    {   
+        // Pause the Idle Audio
+        IdleDrivingSound->SetPaused(true);
+        // Un-Pause the Driving Audio
+        FastDrivingSound->SetPaused(false); // Note: When the audio is finished playing (on Audio finished) it will be activated again in BP (Tank_BP Input Binding)
+    }
+    // SidewaySpeed used, because some track will always have a currentTHrottle of 0 (for example conventional steering or turning)
+    else if (CurrentThrottle == 0 &&  FGenericPlatformMath::RoundToInt(SidewaySpeed) == 0)
+    {
+        // Pause the Driving Sound
+        FastDrivingSound->SetPaused(true);
 
+        // Play the Idle Sound
+        IdleDrivingSound->SetPaused(false); // Note: When the audio is finished playing (on Audio finished) it will be activated again in BP (Tank_BP Input Binding)
+    }
 
     // CLARIFY!!!
     // Why is this function called every frame and not only on input event?????????????????????
@@ -87,7 +106,7 @@ void UTankTrack::DriveTrack()
 void UTankTrack::ApplySidewaysForce()
 {
     // Get the sideways speed with which the tracks are slipping and divide by two to get the tanks sideway speed
-    float SidewaySpeed = FVector::DotProduct( GetRightVector(), GetComponentVelocity() ) / 2;
+    SidewaySpeed = FVector::DotProduct( GetRightVector(), GetComponentVelocity() ) / 2;
 
     // Calculate the opposite needed acceleration per frame v = at --> a = v/t
     float DeltaTime = GetWorld()->GetDeltaSeconds();
@@ -135,4 +154,11 @@ void UTankTrack::CheckIfGoingUpAndApplyDownwardForce()
     
     UE_LOG(LogTemp, Warning, TEXT("Doing nothing"));
     */
+}
+
+void UTankTrack::GetTrackSoundEffects(UAudioComponent* FastDrivingSoundToSet, UAudioComponent* IdleDrivingSoundToSet)
+{
+    // UE_LOG(LogTemp, Warning, TEXT("Yes, this function gets called"));
+    FastDrivingSound = FastDrivingSoundToSet;
+    IdleDrivingSound = IdleDrivingSoundToSet;
 }
