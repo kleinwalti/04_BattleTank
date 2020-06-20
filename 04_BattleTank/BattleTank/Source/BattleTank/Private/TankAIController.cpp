@@ -63,6 +63,7 @@ void ATankAIController::Tick( float DeltaSeconds )
 
 void ATankAIController::OnTankDeath()
 {
+    // Remove the AI Controller from the Tank
     GetPawn()->DetachFromControllerPendingDestroy();
     // UE_LOG(LogTemp, Warning, TEXT("OnTankDeath() is being executed - AI Tank should die"));
 }

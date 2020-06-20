@@ -40,7 +40,22 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Setup")
 	float GetCurrentHealth() const;
 
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	UAudioComponent* FiringSound = nullptr;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+private:
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	UStaticMeshComponent* TankMesh = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	UParticleSystemComponent* DeathExplosion = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	UAudioComponent* ImpactSound = nullptr;
+
+	void OnTankDeath();
 };

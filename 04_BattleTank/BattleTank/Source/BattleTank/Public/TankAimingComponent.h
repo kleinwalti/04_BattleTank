@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Michael Waltersdorf.
 
 #pragma once
 
@@ -20,8 +20,9 @@ enum class EFiringState : uint8
 class UTankBarrel;
 class AProjectile;
 class UTankTurret;
+class UAudioComponent;
 
-// Is handling the Tank Aiming
+// Is handling the Tank Aiming and Firing
 UCLASS( ClassGroup=(TankCustom), meta=(BlueprintSpawnableComponent) )
 class BATTLETANK_API UTankAimingComponent : public UActorComponent
 {
@@ -39,7 +40,7 @@ public:
 
 	// Sets the Reference for the Barrel and the Turret
 	UFUNCTION(BlueprintCallable, Category = "Setup")
-	void InitializeAimingReference(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
+	void InitializeAimingReference(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet, UAudioComponent* FiringSound);
 
 	// Makes it possible to set the Projectile_BP in Blueprint for this variable 'ProjectileBlueprint' to be used in C++
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
@@ -71,6 +72,9 @@ private:
 	// SetBarrelReference function, which is called in blueprint and in blueprint we pass in the getBarrel reference.
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
+
+	// Define what the Audio Component with the Firing Sound on it is (to be passed in by Blueprint)
+	UAudioComponent* FiringSound = nullptr;
 	void MoveBarrelTowards();	// ( FVector AimDirection )
 
 	bool IsBarrelMoving();

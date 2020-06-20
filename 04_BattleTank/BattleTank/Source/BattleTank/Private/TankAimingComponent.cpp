@@ -1,6 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Michael Waltersdorf.
 
-
+#include "Components/AudioComponent.h"
 #include "TankAimingComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Math/Vector.h"
@@ -151,18 +151,18 @@ void UTankAimingComponent::MoveBarrelTowards()	//( FVector AimDirection )
 	{
 		Turret->RotateWithRelativeSpeed(DeltaRotator.Yaw);
 	}
-
 }
 
 // This function is called in the Tank_BP
-void UTankAimingComponent::InitializeAimingReference(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
+void UTankAimingComponent::InitializeAimingReference(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet, UAudioComponent* FiringSoundToSet)
 {
 	// Protection from null-pointer
 	if (!BarrelToSet || !TurretToSet) {UE_LOG(LogTemp, Error, TEXT("TankAimingComponent.cpp-InitializeAimingReference(): I did not receive any Barrel or Turret ToSet! Careful, null-pointer!")); return; }
 
-	// Set the Barrel and the Turret Reference
+	// Set the Barrel, the Turret Reference and the Firing Sound
 	Barrel = BarrelToSet;
 	Turret = TurretToSet;
+	FiringSound = FiringSoundToSet;
 }
 
 void UTankAimingComponent::Fire()
@@ -178,7 +178,7 @@ void UTankAimingComponent::Fire()
 	if (FiringState == EFiringState::Aiming || FiringState == EFiringState::Locked)
 	{
 		// Log out firing (to help to see of other constant logs stopped or are still firing)
-		UE_LOG(LogTemp, Warning, TEXT("Fire!"));
+		// UE_LOG(LogTemp, Warning, TEXT("Fire!"));
 
 
 		// Get the Socket Location and Rotation
@@ -187,10 +187,15 @@ void UTankAimingComponent::Fire()
 
 		// Spawn Projectile_BP (set in Tank_BP) at Socket Location
 		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, SocketLocation, SocketRotation);
+
+		// Protection from null ptr
 		if (!ensure(Projectile)) { UE_LOG(LogTemp, Error, TEXT("No Projectile could be spawned! Check Tank_BP -> TankAiming -> Setup if Projectile Blueprint is set to Projectile_BP")); return; }
-		
+		if (!ensure(FiringSound)) { UE_LOG(LogTemp, Warning, TEXT("No Firing Sound in TankAimingComp")); return; }
 		// Launch Projectile
 		Projectile->LaunchProjectile(LaunchSpeed);
+
+		// Play Firing Sound
+		FiringSound->Activate();
 
 		// Reduce the remaining ammonition
 		RoundsLeft--;		
